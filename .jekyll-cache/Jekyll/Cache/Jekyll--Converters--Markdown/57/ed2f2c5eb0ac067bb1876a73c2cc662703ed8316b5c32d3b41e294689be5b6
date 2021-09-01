@@ -1,0 +1,128 @@
+I"_#<p>이제는 나도 개발 블로그를 하나 해야겠다는 생각으로 Github Pages로 지금 이 블로그를 만들기 시작하던 중이었다.</p>
+
+<p>###jekyll 테마를 다운받아 로컬 호스팅 해보기</p>
+
+<p>많은 개발자들이 그러하듯 <code class="language-plaintext highlighter-rouge">jekyll</code> 테마를 이용하기 위해 <code class="language-plaintext highlighter-rouge">homebrew</code>로 버전 관리자인 <code class="language-plaintext highlighter-rouge">rbenv</code> 먼저 설치해주고</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew install rbenv
+</code></pre></div></div>
+<p>rbenv로 가능한 <code class="language-plaintext highlighter-rouge">Ruby</code>버전들을 확인해본다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv install --list
+
+2.6.8
+2.7.4
+3.0.2
+jruby-9.2.19.0
+mruby-3.0.0
+rbx-5.0
+truffleruby-21.2.0.1
+truffleruby+graalvm-21.2.0
+
+Only latest stable releases for each Ruby implementation are shown.
+Use 'rbenv install --list-all / -L' to show all local versions.
+</code></pre></div></div>
+<p>3.0.2가 가장 최근이니 거침없이 다운했다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv install 3.0.2
+</code></pre></div></div>
+<p>Ruby 패키지 관리 프레임워크인 <code class="language-plaintext highlighter-rouge">RubyGems</code>는 <a href="https://rubygems.org/pages/download/">공식 홈페이지</a>에서 받고, 그 gem을 이용해서 사용하려는 <code class="language-plaintext highlighter-rouge">jekyll</code>과 <code class="language-plaintext highlighter-rouge">bunlder</code>를 설치한다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem install jekyll bundler
+</code></pre></div></div>
+<p>원하는 jekyll 테마를 다운받아야 했는데 나는 그냥 가장 무난하고 사용이 많은 <a href="https://github.com/mmistakes/minimal-mistakes">minimal mistakes theme</a>을 받았다. 다운받은 테마 디렉토리로 이동 후 bundle을 실행해준다. 정말 컴퓨터는 한 가지 하려면 너무 여러 가지를 시킨다. <del>(명령어 한 번에 다 쭈루룩 되면 안되나…)</del></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bundle
+</code></pre></div></div>
+<p>이제 로컬 호스팅을 하기 위해 <code class="language-plaintext highlighter-rouge">serve</code>명령어 실행!!!</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bundle exec jekyll serve
+</code></pre></div></div>
+<p>잘되나 싶었지만……</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>497 /Library/Ruby/Gems/2.6.0/gems/sassc-2.4.0/lib/sassc/native/sass_input_style.rb
+  498 /Library/Ruby/Gems/2.6.0/gems/sassc-2.4.0/lib/sassc/native/sass_output_style.rb
+  499 /Library/Ruby/Gems/2.6.0/gems/sassc-2.4.0/lib/sassc/native/string_list.rb
+
+[NOTE]
+You may have encountered a bug in the Ruby interpreter or extension libraries.
+Bug reports are welcome.
+For details: https://www.ruby-lang.org/bugreport.html
+
+[IMPORTANT]
+Don't forget to include the Crash Report log file under
+DiagnosticReports directory in bug reports.
+
+zsh: abort      bundle exec jekyll serve
+</code></pre></div></div>
+<p>어째 한 번에 착!하고 잘 될리가 없지…:flushed:
+Crash Report하더니 <code class="language-plaintext highlighter-rouge">abort</code>라.., 명령어가 씹혔다는 얘기다…
+해결방법을 찾아보려 열심히 구글링했다.</p>
+
+<p>###Crash Report 후 abort 문제 해결해보기</p>
+
+<p>이것저것 해결해보았지만…방법이 보이지가 않았다.
+언제나 그랬듯이 열심히 나오는 명령이들 다 때려 넣어보았지만 언제나 그랬듯이 바로 해결되지 않는다.:sweat_smile:
+이 문제를 다루고 있는 가장 최근 커뮤니티를 살피던 중 <code class="language-plaintext highlighter-rouge">Apple m1</code>의 이슈라는 내용들이 있었다. (정말 여러모로 아직은 m1으로 살아가기 걸림돌이 많은 것 같다…)</p>
+
+<p>어떤 m1 유저분은 이제 업데이트 <code class="language-plaintext highlighter-rouge">v3</code>이후로는 해결됬기 때문에 이것저것 업데이트 업데이트를 해보면 된다했다. 물론 해봤는데 안되서 <strong>gem으로 현재 상태를 확인해보고 있던 중이었다.</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem env
+
+RubyGems Environment:
+  - RUBYGEMS VERSION: 3.2.26
+  - RUBY VERSION: 2.6.3 (2019-04-16 patchlevel 62) [universal.arm64e-darwin20]
+  - INSTALLATION DIRECTORY: /Library/Ruby/Gems/2.6.0
+</code></pre></div></div>
+<p>뭔가 이상한데? 직관적으로 RubyGems와 Ruby의 버전 차이가 심함을 알았고 자세히 보니 2019년 버전??? 그러고 보니 아까 난 3.0.2버전을 다운받았는데???</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ruby -v
+ruby 2.6.3p62 (2019-04-16 revision 67580) [universal.arm64e-darwin20]
+</code></pre></div></div>
+<p>정말 2.6.3이라는 뚱딴지 같은 버전으로 설정이 되어있었다.:rage:
+바로 rbenv를 통해 3.0.2로 버전 스위치에 들어갔다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv shell 3.0.2
+
+rbenv: shell integration not enabled. Run `rbenv init' for instructions.
+</code></pre></div></div>
+<p>음…당황하지 않고, 써있는 대로 명령어를 실행해보았다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv init
+
+# Load rbenv automatically by appending
+# the following to ~/.zshrc:
+
+eval "$(rbenv init -)"
+</code></pre></div></div>
+<p>후…다시 한 번 당황하지 않고, 써있는 대로 실행</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ eval "$(rbenv init -)"
+</code></pre></div></div>
+<p>그리고 다시 <code class="language-plaintext highlighter-rouge">$ rbenv shell 3.0.2</code>을 실행하니 드디어 되었다. 그리고 빠르게 디폴트 버전으로 설정해주었다. (나중에야 알았지만 이미 위 명령어로 Ruby 버전이 바뀌어있었다.)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv global 3.0.2
+</code></pre></div></div>
+<p>다시 <code class="language-plaintext highlighter-rouge">$ bundle exec jekyll serve</code> 실행해보니 겁나 잘된다!!! 적어도 내가 찾아봤을 때는 이런 경우에 관해 자세히 쓴 블로그는 못 봐서 이렇게 글을 쓰게 되었다. 따라서 혹시 이런 문제가 있다면 
+##결론 : gem env로 버전 확인 먼저 해보세요
+.
+.
+.
+.
+.
+###또 다른 이슈
+하…끝내고 싶었는데 또 후속 문제가 찾아왔다. 터미널을 끄고 다시 실행하면 또 Ruby 버전이 2.6.3이 되어있다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv global
+
+3.0.2
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">global</code> 버전은 문제 없는데????</p>
+
+<p>PATH가 잘못 들여져하고 확인해봤더니</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ env | grep PATH
+
+PATH=/Users/yooyoungseok/.gem/ruby/2.6.0/bin:/Users/yooyoungseok/.gem/ruby/2.6.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin
+MANPATH=/opt/homebrew/share/man::
+INFOPATH=/opt/homebrew/share/info:
+</code></pre></div></div>
+<p>2.6.0??? 도대체 이게 왜 환경 변수에 왜 있는 거지?</p>
+
+<p>그 이후로도 이것저것 다 해보다가 결국 초심으로 돌아가서 Ruby 버전 관리에 대한 문서로 돌아갔다. 그러다 보니 하나 걸리는 게 
+<code class="language-plaintext highlighter-rouge">Pre-installed macOS system Ruby</code>
+MAC OS에서는 기본적으로 시스템에 Ruby가 있다고 한다…
+버전은 2.6.3이란다. 이마를 탁! 쳤다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ which ruby
+
+/usr/bin/ruby
+</code></pre></div></div>
+<p>이렇게 보인다면 이미 깔려있는 거…문서에서는 그냥 무시하고 다른 버전 관리 시스템(asdf, chruby, rbenv, or rvm)들을 이용해서 사용하면 된다는 데 이것이 환경 변수에 영향을 끼쳐서 터미널을 새로 만들 시 계속해서 영향을 주고 있는 가보다.MAC 사용자인 이상 안고갈 수 밖에 없는 가 보다…:sob:</p>
+:ET
