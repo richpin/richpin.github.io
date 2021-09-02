@@ -209,7 +209,7 @@
       
         <li>
           <a href="mailto:richpinkr99@gmail.com" rel="me" class="u-email">
-            <meta itemprop="email" content="richpinkr99@gmail.com" />
+            <meta itemprop="email" content="richpinkr99@gmail.com">
             <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">이메일</span>
           </a>
         </li>
@@ -315,7 +315,7 @@
         
         <p>이제는 나도 개발 블로그를 하나 해야겠다는 생각으로 Github Pages로 지금 이 블로그를 만들기 시작하던 중이었다.</p>
 
-<p>###jekyll 테마를 다운받아 로컬 호스팅 해보기</p>
+<h2 id="jekyll-테마를-다운받아-로컬-호스팅-해보기">jekyll 테마를 다운받아 로컬 호스팅 해보기</h2>
 
 <p>많은 개발자들이 그러하듯 <code class="language-plaintext highlighter-rouge">jekyll</code> 테마를 이용하기 위해 <code class="language-plaintext highlighter-rouge">homebrew</code>로 버전 관리자인 <code class="language-plaintext highlighter-rouge">rbenv</code> 먼저 설치해주고</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew install rbenv
@@ -364,14 +364,14 @@ DiagnosticReports directory in bug reports.
 
 zsh: abort      bundle exec jekyll serve
 </code></pre></div></div>
-<p>어째 한 번에 착!하고 잘 될리가 없지…:flushed:
+<p>어째 한 번에 착!하고 잘 될리가 없지…<img class="emoji" title=":flushed:" alt=":flushed:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f633.png" height="20" width="20"><br>
 Crash Report하더니 <code class="language-plaintext highlighter-rouge">abort</code>라.., 명령어가 씹혔다는 얘기다…
 해결방법을 찾아보려 열심히 구글링했다.</p>
 
-<p>###Crash Report 후 abort 문제 해결해보기</p>
+<h2 id="crash-report-후-abort-문제-해결해보기">Crash Report 후 abort 문제 해결해보기</h2>
 
 <p>이것저것 해결해보았지만…방법이 보이지가 않았다.
-언제나 그랬듯이 열심히 나오는 명령이들 다 때려 넣어보았지만 언제나 그랬듯이 바로 해결되지 않는다.:sweat_smile:
+언제나 그랬듯이 열심히 나오는 명령이들 다 때려 넣어보았지만 언제나 그랬듯이 바로 해결되지 않는다.<img class="emoji" title=":sweat_smile:" alt=":sweat_smile:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f605.png" height="20" width="20"><br>
 이 문제를 다루고 있는 가장 최근 커뮤니티를 살피던 중 <code class="language-plaintext highlighter-rouge">Apple m1</code>의 이슈라는 내용들이 있었다. (정말 여러모로 아직은 m1으로 살아가기 걸림돌이 많은 것 같다…)</p>
 
 <p>어떤 m1 유저분은 이제 업데이트 <code class="language-plaintext highlighter-rouge">v3</code>이후로는 해결됬기 때문에 이것저것 업데이트 업데이트를 해보면 된다했다. 물론 해봤는데 안되서 <strong>gem으로 현재 상태를 확인해보고 있던 중이었다.</strong></p>
@@ -387,7 +387,7 @@ RubyGems Environment:
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ruby -v
 ruby 2.6.3p62 (2019-04-16 revision 67580) [universal.arm64e-darwin20]
 </code></pre></div></div>
-<p>정말 2.6.3이라는 뚱딴지 같은 버전으로 설정이 되어있었다.:rage:
+<p>정말 2.6.3이라는 뚱딴지 같은 버전으로 설정이 되어있었다.<img class="emoji" title=":rage:" alt=":rage:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f621.png" height="20" width="20"><br>
 바로 rbenv를 통해 3.0.2로 버전 스위치에 들어갔다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv shell 3.0.2
 
@@ -407,15 +407,18 @@ eval "$(rbenv init -)"
 <p>그리고 다시 <code class="language-plaintext highlighter-rouge">$ rbenv shell 3.0.2</code>을 실행하니 드디어 되었다. 그리고 빠르게 디폴트 버전으로 설정해주었다. (나중에야 알았지만 이미 위 명령어로 Ruby 버전이 바뀌어있었다.)</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv global 3.0.2
 </code></pre></div></div>
-<p>다시 <code class="language-plaintext highlighter-rouge">$ bundle exec jekyll serve</code> 실행해보니 겁나 잘된다!!! 적어도 내가 찾아봤을 때는 이런 경우에 관해 자세히 쓴 블로그는 못 봐서 이렇게 글을 쓰게 되었다. 따라서 혹시 이런 문제가 있다면 
-##결론 : gem env로 버전 확인 먼저 해보세요
-.
-.
-.
-.
-.
-###또 다른 이슈
-하…끝내고 싶었는데 또 후속 문제가 찾아왔다. 터미널을 끄고 다시 실행하면 또 Ruby 버전이 2.6.3이 되어있다.</p>
+<p>다시 <code class="language-plaintext highlighter-rouge">$ bundle exec jekyll serve</code> 실행해보니 겁나 잘된다!!! 적어도 내가 찾아봤을 때는 이런 경우에 관해 자세히 쓴 블로그는 못 봐서 이렇게 글을 쓰게 되었다. 따라서 혹시 이런 문제가 있다면</p>
+<blockquote>
+  <p><strong>결론 : gem env로 버전 확인 먼저 해보세요</strong></p>
+</blockquote>
+
+<p>.<br>
+.<br>
+.<br>
+. <br>
+.</p>
+<h2 id="또-다른-이슈">또 다른 이슈</h2>
+<p>하…끝내고 싶었는데 또 후속 문제가 찾아왔다. 터미널을 끄고 다시 실행하면 또 Ruby 버전이 2.6.3이 되어있다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv global
 
 3.0.2
@@ -431,15 +434,15 @@ INFOPATH=/opt/homebrew/share/info:
 </code></pre></div></div>
 <p>2.6.0??? 도대체 이게 왜 환경 변수에 왜 있는 거지?</p>
 
-<p>그 이후로도 이것저것 다 해보다가 결국 초심으로 돌아가서 Ruby 버전 관리에 대한 문서로 돌아갔다. 그러다 보니 하나 걸리는 게<br />
-<code class="language-plaintext highlighter-rouge">Pre-installed macOS system Ruby</code><br />
+<p>그 이후로도 이것저것 다 해보다가 결국 초심으로 돌아가서 Ruby 버전 관리에 대한 문서로 돌아갔다. 그러다 보니 하나 걸리는 게<br>
+<code class="language-plaintext highlighter-rouge">Pre-installed macOS system Ruby</code><br>
 MAC OS에서는 기본적으로 시스템에 Ruby가 있다고 한다…
 버전은 2.6.3이란다. 이마를 탁! 쳤다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ which ruby
 
 /usr/bin/ruby
 </code></pre></div></div>
-<p>이렇게 보인다면 이미 깔려있는 거…문서에서는 그냥 무시하고 다른 버전 관리 시스템(asdf, chruby, rbenv, or rvm)들을 이용해서 사용하면 된다는 데 이것이 환경 변수에 영향을 끼쳐서 터미널을 새로 만들 시 계속해서 영향을 주고 있는 가보다.MAC 사용자인 이상 안고갈 수 밖에 없는 가 보다…:sob:</p>
+<p>이렇게 보인다면 이미 깔려있는 거…문서에서는 그냥 무시하고 다른 버전 관리 시스템(asdf, chruby, rbenv, or rvm)들을 이용해서 사용하면 된다는 데 이것이 환경 변수에 영향을 끼쳐서 터미널을 새로 만들 시 계속해서 영향을 주고 있는 가보다. MAC 사용자인 이상 안고갈 수 밖에 없는 가 보다…<img class="emoji" title=":sob:" alt=":sob:" src="https://github.githubassets.com/images/icons/emoji/unicode/1f62d.png" height="20" width="20"></p>
 
 <p>그래서 나같은 경우는 그나마 편하게 <code class="language-plaintext highlighter-rouge">~/.bash_profile</code>안에</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PATH="$HOME/.rbenv/bin:$PATH"
@@ -473,7 +476,7 @@ eval "$(rbenv init -)"
 
   <a href="https://www.facebook.com/sharer/sharer.php?u=%2Fcrash-abort-post%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=%2Fcrash-abort-post%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2Fcrash-abort-post%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="공유하기 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
@@ -499,13 +502,15 @@ eval "$(rbenv init -)"
 
     
       <div class="search-content">
-        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+        <div class="search-content__inner-wrap">
+<form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
     <label class="sr-only" for="search">
       Enter your search term...
     </label>
-    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="검색어를 입력하세요..." />
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="검색어를 입력하세요...">
   </form>
-  <div id="results" class="results"></div></div>
+  <div id="results" class="results"></div>
+</div>
 
       </div>
     
@@ -543,7 +548,7 @@ eval "$(rbenv init -)"
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2021 유영석. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">© 2021 유영석. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
