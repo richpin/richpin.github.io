@@ -31,6 +31,7 @@ layout: default
           </h1>{% endif %}
           {% include page__meta.html %}
         </header>
+        <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].date_label | default: "Updated:" }} <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %d, %Y" }}</time></p>
       {% endunless %}
 
       <section class="page__content e-content" itemprop="text">

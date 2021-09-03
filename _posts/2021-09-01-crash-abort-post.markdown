@@ -1,8 +1,6 @@
 ---
-title: "jekyll serve 명령 실행 시 crash-abort 이슈"
+title: "[Jekyll] jekyll serve 명령 실행 시 crash-abort 이슈"
 excerpt: "jekyll serve 명령 실행이 bug report에 대한 내용과 함께 abort 될 때"
-
-last_modified_at: 20201-09-01
 ---
 
 이제는 나도 개발 블로그를 하나 해야겠다는 생각으로 Github Pages로 지금 이 블로그를 만들기 시작하던 중이었다.  

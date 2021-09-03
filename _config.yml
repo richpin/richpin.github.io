@@ -103,7 +103,7 @@ analytics:
 author:
   name             : "유영석"
   avatar           : "/assets/images/github_profile(smaller).jpeg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "초보 개발자지만 아무쪼록 얻어가는 것이 조금이라도 있었으면 좋겠습니다."
+  bio              : "겪었던 시행착오나 공부했던 개념 중 한글 문서에서 큰 도움을 받지 못했던 부분을 위주로 글을 작성하고 있습니다. 초보 개발자지만 아무쪼록 얻어가는 것이 조금이라도 있었으면 좋겠습니다."
   location         : "서울, 대한민국"
   email            : "richpinkr99@gmail.com"
   links:
@@ -284,7 +284,7 @@ defaults:
     values:
       layout: single
       author_profile: true
-      read_time: true
+      read_time: false
       comments: true
       share: true
       related: true
