@@ -4,4 +4,10 @@ var store = [{
         "tags": [],
         "url": "/crash-abort-post/",
         "teaser": null
+      },{
+        "title": "[Android] 원하는 이미지를 다양한 픽셀에 맞도록 android resource로 추가하는 법",
+        "excerpt":"안드로이드 어플리케이션을 만드는 도중 초반 작업인 Splash 화면을 만들고 있었다. 안드로이드 Splash 화면 만들기 어플이 실행되기 전에 로딩 화면과도 같은 Splash는 대부분의 어플에 적용이 되어 있다. 이 Splash 화면을 만들기 위해 많은 방법들이 있다. 대표적으로 사용되는 것이 Splash Activity 방법인데 이는 간단히 Main Activity가 실행되기 전, Splash Activity를 띄우는 방법이다....","categories": [],
+        "tags": [],
+        "url": "/android-density-resource-post/",
+        "teaser": null
       }]

@@ -1,0 +1,29 @@
+I"<p>안드로이드 어플리케이션을 만드는 도중 초반 작업인 <strong>Splash</strong> 화면을 만들고 있었다.</p>
+
+<h2 id="안드로이드-splash-화면-만들기">안드로이드 Splash 화면 만들기</h2>
+
+<p>어플이 실행되기 전에 로딩 화면과도 같은 <code class="language-plaintext highlighter-rouge">Splash</code>는 대부분의 어플에 적용이 되어 있다. 이 <code class="language-plaintext highlighter-rouge">Splash</code> 화면을 만들기 위해 많은 방법들이 있다. 대표적으로 사용되는 것이 <code class="language-plaintext highlighter-rouge">Splash Activity</code> 방법인데 이는 간단히 <code class="language-plaintext highlighter-rouge">Main Activity</code>가 실행되기 전, <code class="language-plaintext highlighter-rouge">Splash Activity</code>를 띄우는 방법이다. 허나 단순히 팝업 이미지를 위해 <code class="language-plaintext highlighter-rouge">Activity</code>를 소모하는 것은 자원 낭비가 심하다 판단해 요즘은 <code class="language-plaintext highlighter-rouge">Theme</code> 방법을 쓰는 것 같다. 물론 나는 이 방법으로 했다. (만약 애니메이션 형식의 Splash를 원한다면 <a href="https://developer.android.com/about/versions/12/features/splash-screen">여기</a>를 참조하도록)</p>
+
+<p>방법은 간단하다. 먼저 <code class="language-plaintext highlighter-rouge">drawable - New - Drawable Resource File</code>을 들어가 새로운 splash용 <code class="language-plaintext highlighter-rouge">xml 파일</code>을 생성하여 준다.
+<img src="/assets/images/splash_create.png" alt="splash_create" /></p>
+
+<p>만들어 졌다면 해당 xml 파일로 들어가 아래와 같은 코드를 넣어준다</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;layer-list</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">android:drawable=</span><span class="s">"@android:color/white"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;item&gt;</span>
+        <span class="nt">&lt;bitmap</span>
+            <span class="na">android:src=</span><span class="s">"@drawable/app_logo"</span>
+            <span class="na">android:gravity=</span><span class="s">"center"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/layer-list&gt;</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">android:drawable</code>에는 넣고 싶은 배경색을 넣어주면 되고 <code class="language-plaintext highlighter-rouge">android:src</code>에는 넣고 싶은 Splash 이미지를 넣어주면 된다.
+그 후에 ‘AndroidManifest.xml<code class="language-plaintext highlighter-rouge">에서 </code>MainActivity<code class="language-plaintext highlighter-rouge">의 </code>Theme<code class="language-plaintext highlighter-rouge">을 새로 만든 </code>SplashTheme`으로 지정하여 준다.</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;activity</span>
+    <span class="na">android:name=</span><span class="s">".MainActivity"</span>
+    <span class="na">android:exported=</span><span class="s">"true"</span>
+    <span class="na">android:theme=</span><span class="s">"@style/SplashTheme"</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+<p>그리고 <code class="language-plaintext highlighter-rouge">MainActivity.kt</code>(Java의 경우엔 <code class="language-plaintext highlighter-rouge">MainActivity.java</code>)의 <code class="language-plaintext highlighter-rouge">onCreate</code>에서 가장 먼저 Theme을 기존 MainActivity의</p>
+:ET
