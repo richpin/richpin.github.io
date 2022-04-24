@@ -1,0 +1,18 @@
+I"<p>이번에는 저번시간에 이어 Lock에 대해 더 자세히 알아보는 시간을 가져봅시다.</p>
+
+<h1 id="lock이란-무엇일까">Lock이란 무엇일까?</h1>
+
+<p><code class="language-plaintext highlighter-rouge">Lock</code>은 critical section을 지키기 위해, 즉 Mutual Exclusion을 위해 사용하는 방법입니다. Lock 변수는 아래와 같은 두가지 상태를 저장할 수 있습니다.</p>
+
+<ul>
+  <li>Avaliable(unlocked, free한 상태)</li>
+  <li>Acquired(locked, held한 상태)
+즉 Acquired한 상태에서 다른 스레드가 lock을 시도하는 것을 <code class="language-plaintext highlighter-rouge">acquire a lock</code>이라고 표현하면 되겠습니다. 또한 lock을 현재 hold하고 있는 스레드를 <code class="language-plaintext highlighter-rouge">owner</code>이라 칭합니다. owner가 unlock을 호출해줄 때 비로소 해당 lock 변수에 대해 다른 스레드가 lock을 시도할 수 있는 상태가 되는 것입니다. 기본 사용법은 아래와 같습니다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pthread_mutex_t</span> <span class="n">lock</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+<span class="n">Pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+<span class="n">balance</span> <span class="o">=</span> <span class="n">balance</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">Pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,67 @@
+I"�<p>이번에는 저번시간에 이어 Lock에 대해 더 자세히 알아보는 시간을 가져봅시다.</p>
+
+<h1 id="lock이란-무엇일까">Lock이란 무엇일까?</h1>
+
+<p><code class="language-plaintext highlighter-rouge">Lock</code>은 critical section을 지키기 위해, 즉 Mutual Exclusion을 위해 사용하는 방법입니다. Lock 변수는 아래와 같은 두가지 상태를 저장할 수 있습니다.</p>
+
+<ul>
+  <li>Avaliable(unlocked, free한 상태)</li>
+  <li>Acquired(locked, held한 상태)
+즉 Acquired한 상태에서 다른 스레드가 lock을 시도하는 것을 <code class="language-plaintext highlighter-rouge">acquire a lock</code>이라고 표현하면 되겠습니다. 또한 lock을 현재 hold하고 있는 스레드를 <code class="language-plaintext highlighter-rouge">owner</code>이라 칭합니다. owner가 unlock을 호출해줄 때 비로소 해당 lock 변수에 대해 다른 스레드가 lock을 시도할 수 있는 상태가 되는 것입니다. 기본 사용법은 아래와 같습니다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pthread_mutex_t</span> <span class="n">lock</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+<span class="n">Pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+<span class="n">balance</span> <span class="o">=</span> <span class="n">balance</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">Pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>lock 구현할 때 고려해봐야 하는 사항들은 아래와 같습니다.</p>
+
+<ul>
+  <li>Correctness - Mutual Exclusion을 완벽히 보장하는가?</li>
+  <li>Fairness - 여러 스레드가 있을 때, 각가의 스레드가 lock을 걸 기회가 공정하게 주어지는가?</li>
+  <li>Performance - single CPU, multi CPU에서 time overhead가 어떻게 도출되는가?</li>
+</ul>
+
+<h1 id="lock을-구현하기-위한-방법">Lock을 구현하기 위한 방법</h1>
+
+<p>그렇다면 이제 이 Lock을 구현하는 방법은 어떤 것이 있고 어떻게 발전되어 왔는지 알아보도록 하겠습니다.</p>
+
+<h2 id="controlling-interrupts">Controlling Interrupts</h2>
+
+<p>가장 초창기에는 critical section안에서 <code class="language-plaintext highlighter-rouge">interrupt</code>을 <code class="language-plaintext highlighter-rouge">disable</code>하는 방식으로 mutual exclusion을 제공하려 하였습니다. 매우 간단하는 장점이 앞서지만 그에 비해 아래와 같은 단점들이 너무 많았습니다.</p>
+
+<ol>
+  <li>interrupt를 켜고 끄기 위해 <code class="language-plaintext highlighter-rouge">previleged</code>한 권한이 필요하게 됩니다.</li>
+  <li>여러 프로세서가 있는 <code class="language-plaintext highlighter-rouge">Mutliprocessors</code> 시스템에서는 동작하지 않게 됩니다.</li>
+  <li>interrupt가 강제적으로 막혀 있다는 것 자체가 현대에서는 실행을 느리게 하며 비효율적이라는 점을 피할 수 없습니다.</li>
+</ol>
+
+<h2 id="using-loadsstores">Using Loads/Stores</h2>
+
+<p>thread에서 spin을 설명했을 때와 같이 그냥 하나의 <code class="language-plaintext highlighter-rouge">flag variable</code>을 이용하는 방법입니다.</p>
+
+<p><img src="/assets/img/os_locks/load_and_store.png" alt="load_store" width="50%" height="50%" /></p>
+
+<p>하지만 위에서 표시한대로 저 시점에 interrupt가 발생해 context switching이 된다면 양 스레드가 모두 while문을 가볍게 통과한 후 flag=1을 수행해 애시당초에 <code class="language-plaintext highlighter-rouge">Correctness</code>를 보장하지 못합니다.</p>
+
+<h2 id="petersons-algorithm">Peterson’s Algorithm</h2>
+
+<p>위와 같은 오류를 방지하고 Peterson은 다음과 같은 알고리즘을 고안하였습니다.</p>
+
+<p><img src="/assets/img/os_locks/peterson_algorithm.png" alt="peterson" width="50%" height="50%" /></p>
+
+<p>flag도 따로 있고 무엇보다 공유되는 <code class="language-plaintext highlighter-rouge">turn</code>이라는 변수가 있어 현재가 누구 차례여야 하는지가 명확합니다. 따라서 전과 달리 mutual exclusion을 보장할 수 있었죠. 그러나 이러한 알고리즘도 lock에 대해서 <strong>Hardware Support</strong>가 지원되면서 점차 필요성을 잃게 되었습니다. 또한, <code class="language-plaintext highlighter-rouge">relaxed memory consistency model</code>의 등장도 한 몫 했죠. load와 store의 순서를 자체적으로 <code class="language-plaintext highlighter-rouge">reordering</code>하는 이 모델에서 이 알고리즘은 제대로 동작할 수 없었습니다. 그래서 다음부터는 hardware support를 받는 방식들을 알아보도록 하겠습니다.</p>
+
+<h2 id="test-and-set">Test-And-Set</h2>
+
+<p><img src="/assets/img/os_locks/test_and_set_code.png" alt="test-and-set-code" width="50%" height="50%" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">Test-And-Set</code>은 정말 말그대로 flag variable을 test를 하고 set을 하는 함수입니다.. 전에 보았던 단순 Load/Store의 코드를 봤을 때 우리는 flag값을 확인하고(test) spin을 빠져나온 후 다시 flag에 값을 채우기(set) 전에 interrupt가 걸려 버리는 문제를 확인한 바가 있습니다. (전전 그림을 다시 확인해 보세요!.)
+그러므로 hardware는 그 일련의 test와 set과정을 하나의 함수안에 넣고 그 함수가 atomic하게 즉, 실행될 때에는 <code class="language-plaintext highlighter-rouge">uninterruptable</code>하게 지원해줍니다.</p>
+
+<p><img src="/assets/img/os_locks/test_and_set_example.png" alt="test-and-set-ex" width="50%" height="50%" /></p>
+
+<h2 id="compare-and-swap">Compare-And-Swap</h2>
+:ET

@@ -1,11 +1,14 @@
 ---
+layout: post
 title: "[Jekyll] jekyll serve 명령 실행 시 crash-abort 이슈"
-excerpt: "jekyll serve 명령 실행이 bug report에 대한 내용과 함께 abort 될 때"
+description: jekyll serve 명령 실행이 bug report에 대한 내용과 함께 abort 될 때
+img: jekyll_logo.jpeg
+tags: [Jekyll] 
 ---
 
 이제는 저도 개발 블로그를 하나 해야겠다는 생각으로 `Github Pages`로 지금 이 블로그를 만들기 시작하던 중이었습니다.  
 
-## jekyll 테마를 다운받아 로컬 호스팅 해보기
+# jekyll 테마를 다운받아 로컬 호스팅 해보기
 
 많은 개발자들이 그러하듯 `jekyll` 테마를 이용하기 위해 `homebrew`로 버전 관리자인 `rbenv` 먼저 설치해주고  
 ```
@@ -65,7 +68,7 @@ zsh: abort      bundle exec jekyll serve
 `Crash Report`하더니 `abort`라.., 명령어가 씹혔다는 얘기네요...
 해결방법을 찾아보려 열심히 구글링합니다.
 
-## Crash Report 후 abort 문제 해결해보기
+# Crash Report 후 abort 문제 해결해보기
 
 이것저것 해결해보았지만...방법이 보이지가 않았습니다.
 열심히 나오는 명령어들 다 때려 넣어보았지만 언제나 그랬듯이 바로 해결되지 않네요.:sweat_smile:  
@@ -118,7 +121,7 @@ $ rbenv global 3.0.2
 .  
 .   
 .  
-## 또 다른 이슈
+# 또 다른 이슈
 하...끝내고 싶었는데 또 후속 문제가 찾아왔습니다. 터미널을 끄고 다시 실행하면 또 `Ruby` 버전이 `2.6.3`이 되어있네요.
 ```
 $ rbenv global
