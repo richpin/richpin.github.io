@@ -1,0 +1,112 @@
+I"�.<p>이번에는 <strong>Condition Variables</strong>에 대해 알아보도록 합시다.</p>
+
+<h1 id="condition-variabels란-무엇일까">Condition Variabels란 무엇일까?</h1>
+
+<p>’'’c
+void *child(void *arg) {
+    printf(“child\n”);
+    done = 1;
+    return NULL;
+}
+…
+Pthread_create(&amp;c, NULL, child, NULL);
+while (done == 0)
+; // spin
+‘’’</p>
+
+<p>위의 예시에서는 child가 해야할 일을 마무리하면 done이라는 공유 변수로 종료를 알리고 있습니다. 여기서는 우리가 이전에 lock에서 공부했던 spin 방법으로 이 스레드의 신호를 기다리고 있습니다. 결국 부모 스레드, 즉 이 상황에서 메인 스레드는 의미 없는 반복문(spin)을 실행시키며 기다리고 있는 것이죠. 이는 엄청난 CPU의 낭비가 아닐 수 없습니다!:triumph: Single-CPU라면 낭비의 효과가 더욱 체감되겠죠?? 따라서 이 spin을 수행하는 것이 아니라 기다리고 있는 스레드를 <code class="language-plaintext highlighter-rouge">Sleeping State</code> 전환하기 위해 우리는 <code class="language-plaintext highlighter-rouge">Condition Variable</code>을 사용해야 하는 겁니다.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pthread_cond_wait</span><span class="p">(</span><span class="n">pthread_cond_t</span> <span class="o">*</span><span class="n">c</span><span class="p">,</span> <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">m</span><span class="p">);</span>
+<span class="n">pthread_cond_signal</span><span class="p">(</span><span class="n">pthread_cond_t</span> <span class="o">*</span><span class="n">c</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Condition Variable은 하나의 명시적인 <code class="language-plaintext highlighter-rouge">Queue</code>입니다. <code class="language-plaintext highlighter-rouge">wait()</code> 함수는 위에서 설명한대로 기다려야 할 스레드가 Sleeping State, 정확히는 스레드를 Queue에 넣습니다. ‘signal()’ 함수는 wait()으로 기다리고 있는 스레드에게 신호를 줌으로써 <code class="language-plaintext highlighter-rouge">Ready State</code>, 즉 스레드를 깨우는 것이죠. 일반적인 사용법의 예시는 아래와 같습니다.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">done</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">pthread_mutex_t</span> <span class="n">m</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+    <span class="n">pthread_cond_t</span> <span class="n">c</span> <span class="o">=</span> <span class="n">PTHREAD_COND_INITIALIZER</span><span class="p">;</span>   
+
+<span class="kt">void</span> <span class="nf">thr_exit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span> 
+    <span class="n">done</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">Pthread_cond_signal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
+    <span class="n">thread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">child</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">printf</span><span class="p">(</span><span class="s">"child</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+   <span class="n">thr_exit</span><span class="p">();</span>
+   <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">thr_join</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">done</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">Pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="n">Pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+<span class="p">}</span>   
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"parent: begin</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="n">pthread_t</span> <span class="n">p</span><span class="p">;</span>
+    <span class="n">Pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">thr_join</span><span class="p">();</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"parent: end</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Pthread_cond_wait함수의 가장 큰 특징은 기다리는 상태에 들어가면서 <strong>일시적으로 Lock을 release 한 뒤 signal을 통해 깼을 때 다시 lock을 가지는 것입니다.</strong> 왜냐하면 Lock을 건 상태로 기다리면 다른 스레드가 signal을 보낼 여지주차 줄 수 없기 때문이죠. 추가적으로 의문점을 가질 수 있는 질문은 다음과 같습니다.</p>
+
+<p>Q. 왜 wait/signal 전에 <code class="language-plaintext highlighter-rouge">mutex_lock</code>을 걸어야 하는가?</p>
+
+<p>A. <code class="language-plaintext highlighter-rouge">Race Condition</code>을 방지하기 위해서입니다. 같은 cond_t를 공유하는 wait과 signal이 함께 일어나면 될까요?:joy:</p>
+
+<p>Q. 무엇 때문에 done이라는 static variable을 사용해야 하는가?</p>
+
+<p>A. 만약에 wait전에 signal이 호출 되었다고 생각한다면, wait은 오지 않는 signal을 무한하게 기다려야 할 겁니다.</p>
+
+<p>Q. 그렇다면 왜 done을 확인하는데 while문으로 반복적으로 확인하는가?</p>
+
+<p>A. 여러 스레드가 wait</p>
+
+<h1 id="producerconsumerbounded-buffer-problem">Producer/Consumer(Bounded Buffer) Problem</h1>
+
+<p>앞으로를 공부하기 위해 유명한 <code class="language-plaintext highlighter-rouge">Producer/Consumer Problem</code>을 알아봅시다. 매우 간단합다. Producer은 buffer에 아이템을 가져다 놓고 consumer은 이 item을 가져가는 것입니다.(읽기 및 삭제) 당연하지만 이 buffer은 모든 스레드의 shared resource겠죠?. 먼저 버퍼가 하나인 경우의 코드는 아래와 같습니다.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 
+<span class="kt">int</span> <span class="n">buffer</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">//1이면 itme이 차있고, 0이면 비어있습니다.</span>
+
+<span class="kt">void</span> <span class="nf">put</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">get</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">buffer</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">producer</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span> <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">loops</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">arg</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">loops</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">put</span><span class="p">(</span><span class="n">i</span><span class="p">);</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">consumer</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">get</span><span class="p">();</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>알고 넘어가야 할 것은 이 문제에서 producer의 put과 producer의 get이 동시에 일어나는 것을 막기 위해 <code class="language-plaintext highlighter-rouge">lock</code>으로 감싸줘야 한다는 것입니다. 또 하나는, producer과 아이템을 넣어주고(put) 나서야 consumer가 가져갈 수(get) 있겠죠? 그래서 static variable인 <code class="language-plaintext highlighter-rouge">count</code>가 필요한 것입니다.</p>
+
+<p>먼저 첫 번째로, <strong>Single Condition Variable</strong>과 <strong>If statement</strong>을 이용하여 구현해보자.</p>
+
+:ET

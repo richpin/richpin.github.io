@@ -39,7 +39,7 @@ tags: [OS]
 
 `counter = counter + 1`이라는 코드를 수행하는 과정입니다. 내부적으로 위와 같이 fetch하고 add연산한 뒤 store하는 일련의 어셈블리 과정을 내포하고 있죠. 그런데 만약 한 스레드가 fetch하고 add를 하는데 store를 하기 전에 다른 스레드로 context switching이 일어났다고 생각해 봅시다. 그렇다면 이 스레드는 전 스레드가 업데이트를 하기 전의 값을 fetch하게 됩니다. 결과적으로 두 스레드가 모두 store하는 값은 51로 같은 값이 되기 때문에 두 번의 연산으로 예상되는 결과가 벌어지지 않는 것입니다. 이를 `indeterminate`하다라고 표현하며 이와 같은 상황을 **Race Condition**이라고 합니다.
 
-- **Race Condition** - 위와 같이 실행 시점의 타이밍이 맞지 않는 문제로 indeterminaate하게 이루어지는 결과를 뜻합니다
+- **Race Condition** - 위와 같이 실행 시점의 타이밍이 맞지 않는 문제로 indeterminate하게 이루어지는 결과를 뜻합니다
   - **Critical Section** - `shared variable`에 접근하는 구역으로, Race Condition을 방지하기 위해 두 개 이상의 스레드가 실행되서는 안되는 구역입니다.
   - **Mutual Exclusion** - 한 스레드가 Critical Section을 실행하고 있을 때 다른 스레드가 해당 Critical Section을 실행하지 못하게 보장하는 것입니다.
 

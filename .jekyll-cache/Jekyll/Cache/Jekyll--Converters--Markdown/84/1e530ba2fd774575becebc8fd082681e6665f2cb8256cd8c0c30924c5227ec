@@ -1,0 +1,55 @@
+I"�<p>이번에는 <strong>Condition Variables</strong>에 대해 알아보도록 합시다.</p>
+
+<h1 id="condition-variabels란-무엇일까">Condition Variabels란 무엇일까?</h1>
+
+<p>’'’c
+void *child(void *arg) {
+    printf(“child\n”);
+    done = 1;
+    return NULL;
+}
+…
+Pthread_create(&amp;c, NULL, child, NULL);
+while (done == 0)
+; // spin
+‘’’</p>
+
+<p>위의 예시에서는 child가 해야할 일을 마무리하면 done이라는 공유 변수로 종료를 알리고 있다. 여기서는 우리가 이전에 lock에서 공부했던 spin 방법으로 이 스레드의 신호를 기다리고 있다. 결국 부모 스레드, 즉 이 상황에서 메인 스레드는 의미 없는 반복문(spin)을 실행시키며 기다리고 있는 것이다. 엄청난 CPU의 낭비가 아닐 수 없다!:triumph: Single-CPU라면 낭비의 효과가 더욱 체감되지 않을 수 없다. 따라서 이 spin을 수행하는 것이 아니라 기다리고 있는 스레드를 <code class="language-plaintext highlighter-rouge">Sleeping State</code> 전환하기 위해 우리는 <code class="language-plaintext highlighter-rouge">Condition Variable</code>을 사용해야 한다.</p>
+
+<p>Condition Variable은 하나의 명시적인 <code class="language-plaintext highlighter-rouge">Queue</code>이다. <code class="language-plaintext highlighter-rouge">wait()</code> 함수는 위에서 설명한대로 기다려야 할 스레드가 Sleeping State, 정확히는 스레드를 Queue에 넣는다. ‘signal()’ 함수는 wait()으로 기다리고 있는 스레드에게 신호를 줌으로써 <code class="language-plaintext highlighter-rouge">Ready State</code>, 즉 스레드를 깨운다. 일반적인 사용법의 예시는 아래와 같다.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">done</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">pthread_mutex_t</span> <span class="n">m</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+    <span class="n">pthread_cond_t</span> <span class="n">c</span> <span class="o">=</span> <span class="n">PTHREAD_COND_INITIALIZER</span><span class="p">;</span>   
+
+<span class="kt">void</span> <span class="nf">thr_exit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span> 
+    <span class="n">done</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">Pthread_cond_signal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
+    <span class="n">thread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="nf">child</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">printf</span><span class="p">(</span><span class="s">"child</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+   <span class="n">thr_exit</span><span class="p">();</span>
+   <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">thr_join</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">done</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">Pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+    <span class="n">Pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+<span class="p">}</span>   
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"parent: begin</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="n">pthread_t</span> <span class="n">p</span><span class="p">;</span>
+    <span class="n">Pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">thr_join</span><span class="p">();</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"parent: end</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+:ET
