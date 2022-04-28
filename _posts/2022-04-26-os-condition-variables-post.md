@@ -79,7 +79,9 @@ signal을 보낸다고 바로 `Running State`로 스레드가 실행되는 것�
 
 다시 한번 시그널을 받아 깨어났더니 이미 다른 consumer가 아이템을 가져간 스레드가 있다고 가정해봅시다. while이 아니라 전처럼 if라면 바로 의미없는 get과 signal을 실행하게 됩니다. 이런 예기치 못한 경우를 위해 반복적으로 condition을 확인해야 합니다.
 
-그러나 이 경우에도 결국 위에서 발생하였던 하나의 cond variable를 쓰기 때문에 발생하는 문제는 막지 못합니다. consumer가 다른 consumer에게 불필요하게 시그널을 보내게 되기 때문입니다. producer와 consumer **두** 가지의 관계를 확실히 보장하기 위해, 즉 producer는 consumer에게만 consumer는 producer에게만 signal을 보내기 위해 **두** 가지의 cond variable을 가져야 합니다. 그 세 번째 해결책의 코드는 아래와 같습니다. 
+그러나 이 경우에도 결국 위에서 발생하였던 하나의 cond variable를 쓰기 때문에 발생하는 문제는 막지 못합니다. consumer가 다른 consumer에게 불필요하게 시그널을 보내게 되기 때문입니다. producer가 consumer의 signal만을 기다리고 있는데 consumer는 다른 consumer에게 signal을 보냅니다. 그 consumer는 깨어나봤자 값이 없기에 다시 wait 상태로 돌아가게 됩니다. 그렇게 된다면 모두가 wait하고 있는 대참사가 벌어지게 되는 거지요!:dizzy_face: 
+
+producer와 consumer **두** 가지의 관계를 확실히 보장하기 위해, 즉 producer는 consumer에게만 consumer는 producer에게만 signal을 보내기 위해 **두** 가지의 cond variable을 가져야 합니다. 그 세 번째 해결책의 코드는 아래와 같습니다. 
 
 ![tc-while](/assets/img/os-condition-variable/tc_while.png){: width="50%" height="50%"}
 
