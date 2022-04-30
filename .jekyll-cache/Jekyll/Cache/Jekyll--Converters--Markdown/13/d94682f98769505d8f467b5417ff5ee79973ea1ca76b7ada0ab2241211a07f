@@ -1,0 +1,41 @@
+I"�<p>우리가 자주 쓰는 스마트폰에서 데이터를 쓰는 것이 어떻게 가능할까요? 즉, 모바일 단말에서는 어떻게 네트워크가 이루어질까요?</p>
+
+<p>애초에 <code class="language-plaintext highlighter-rouge">IP addressing</code>은 호스트가 하나의 네트워크 안에 <code class="language-plaintext highlighter-rouge">Stationary</code>하게 위치해있는 것을 기준으로 만들어졌습니다. 어떠한 IP주소 또한 그 주소에 해당하는 네트워크 안에 위치할 때 <code class="language-plaintext highlighter-rouge">Valid</code>한 상태가 되는 것이 당연합니다. 그러나, 모바일 노드는 계속해서 네트워크를 옮겨 다닙니다. 그리고 네트워크가 바뀌기 때문에 원할한 네트워킹을 위해서는 <strong>주소 또한 그에 맞게 바뀌어야 하는 것이지요.</strong> 가장 확실한 방법은 재부팅을 하는 것입니다. 그러나 움직이면서 네트워크가 바뀔 때마다 폰을 재부팅한다는 것은 상상만 해도 끔찍한 일이 아닐 수 없습니다. 또 하나의 문제는, 전송이 일어나는 도중에 네트워크가 바뀌게 되면, 데이터 교환에 있어 차질이 생기게 되는 것이지요. <code class="language-plaintext highlighter-rouge">WIFI</code>는 지원하지 못하는 이러한 <code class="language-plaintext highlighter-rouge">Mobility</code> 문제를 해결하기 위해 <code class="language-plaintext highlighter-rouge">Mobile IP</code> 프로토콜이 생기게 되었고, 그 예로 우리가 현재 사용하고 있는 LTE 등이 있는 것입니다.</p>
+
+<h1 id="moblie-ip">Moblie IP</h1>
+
+<p><img src="/assets/img/network_mobile_ip/mobile_internet.png" alt="mobile-internet" width="60%" height="60%" /></p>
+
+<p>Mobile IP에서 인터넷과 연결된 네트워크에는 크게 두 가지가 있습니다. <code class="language-plaintext highlighter-rouge">Home Network(HN)</code>은 폰을 처음 등록하는 변하지 않는 <code class="language-plaintext highlighter-rouge">Permanent</code>한 네트워크 입니다. 즉 우리가 가입을 하면 통신사에서 처음 딱 한 번 정해주는 말뚝과 같은 통신사의 네트워크인 것이죠. 그리고 <code class="language-plaintext highlighter-rouge">Foreign Network</code>는 모바일이 움직일 때마다 그 곳에 해당하는 네트워크를 지칭하는 것으로, 계속해서 바뀌는 <code class="language-plaintext highlighter-rouge">Temporary</code>한 네트워크입니다. Home Network에서 쓰는 주소를 <code class="language-plaintext highlighter-rouge">Home Address(HoA)</code>, Foreign Network에서 쓰는 모바일 노드의 주소를 <code class="language-plaintext highlighter-rouge">Care-of-address(COA)</code>라고 합니다. 추가적으로, Home Network와 연결된 라우터를 <code class="language-plaintext highlighter-rouge">Home Agent(HA)</code>, Foreign Network와 연결된 라우터를 <code class="language-plaintext highlighter-rouge">Foreign Agent(FA)</code>라고 하며 이 둘은 인터넷으로 연결되어 활발한 통신을 수행합니다.</p>
+
+<p>이제 과정을 순서대로 알아볼까요? 추가적으로, 여기서는 우리의 스마트폰을 <code class="language-plaintext highlighter-rouge">Mobile Node(MN)', 우리가 인터넷을 통해 Connection을 맺으려 하는 노드를 </code>Correspondent Node(CN)`이라고 합시다.</p>
+
+<p>먼저 가장 편한 상황입니다. 노드가 Home Network에 있는 상황입니다.</p>
+
+<p><img src="/assets/img/network_mobile_ip/connection.png" alt="connection" width="50%" height="50%" /></p>
+
+<p>이 때는 평범하게 마치 정적인 네트워크 처럼 모바일 노드가 Home Address를 이용해서 CN과 통신합니다. 하지만 이런 경우는 거의 존재하지 않겠죠? 우리는 <code class="language-plaintext highlighter-rouge">Mobility</code>를 해야하지요!</p>
+
+<p><img src="/assets/img/network_mobile_ip/movement.png" alt="movement" width="50%" height="50%" /></p>
+
+<p>우리의 모바일 노드가 새로운 Foreign Network로 이동을 합니다. 그렇다면 Foreign Agent는 모바일 노드를 <code class="language-plaintext highlighter-rouge">detect</code>하고 가지고 있는 <code class="language-plaintext highlighter-rouge">CoA</code> 중 하나를 할당해 줍니다. 이와 동시에 Home Agent에게 우리의 모바일 노드가 이 CoA를 가진다는 <code class="language-plaintext highlighter-rouge">Binding Update</code>를 날려주게 됩니다. Home Agent는 이를 받아 <code class="language-plaintext highlighter-rouge">Binding Cache</code>의 <code class="language-plaintext highlighter-rouge">Mapping</code>을 설정해주는 것이지요. 이걸로 세팅은 끝난 겁니다! 간단하지요?:grin: 그렇다면 이제 CN과의 통신이 어떻게 이루어질지 확인해봅시다.</p>
+
+<p>먼저, 모바일 노드에서 CN으로 패킷을 보낼 때를 살펴봅시다.</p>
+
+<p><img src="/assets/img/network_mobile_ip/mn_to_cn.png" alt="mtc" width="50%" height="50%" /></p>
+
+<p>모바일 노드는 Foreign Agent를 통해 직빵으로 CN에게 패킷을 전달합니다. 평범하지요? 그러나 눈여결 볼 점은 Source Address가 <strong>HoA</strong>라는 점입니다. 이는 처음부터 폰 안에 다 등록이 되어 있기 때문에 가능한 것인데요. 그런데 이런 식으로 자신이 속한 네트워크가 아닌 주소로 보내도 되는 것일까요? 네, 상관없습니다! 어차피 라우터는 Destination Address만 보고 패킷을 Forwarding하기 때문에 Source Address가 다른 것은 문제가 되지 않기 때문입니다. 그렇다면 왜 HoA로 보낸 것일까요? 다음 상황을 보면 이해가 되실 겁니다.</p>
+
+<p>이번에는 CN에서 모바일 노드로 패킷을 보낼 때를 살펴봅시다.</p>
+
+<p><img src="/assets/img/network_mobile_ip/cn_to_mn.png" alt="ctm" width="60%" height="60%" /></p>
+
+<p>CN은 바로 Foreign Agent로 보내는 것이 아닌. Home Agent로 패킷을 전송합니다. 그래서 이전에 HoA로 패킷을 보낸 것입니다. CN에서는 응답으로 Source와 Destination을 바꿔서 패킷을 보내기 때문이죠. 그렇게 온 패킷에 Home Agent는 IP 헤더에 새로운 헤더를 하나 더 붙여 Foreign Agent로 전송합니다. <code class="language-plaintext highlighter-rouge">Tunneling</code>이 형성되는 것이지요. 패킷을 받은 Foreign Agent는 헤더를 잘라나고 패킷을 읽어 모바일 노드로 보내게 됩니다.</p>
+
+<p>그런데 이런! 당연하게도 Destination이 여전히 HoA를 가리키고 있네요. 상관없습니다! Foreign Agent에서 모바일 노드까지는 전달을 <strong>2계층</strong> <code class="language-plaintext highlighter-rouge">MAC</code>에서 하기 때문입니다. 아까 모바일 노드에 HoA가 이미 등록이 되었다는 점을 명시했었죠? 처음 Foreign Network로 이동해 Foreign Agent로부터 CoA를 받을 때 모바일 노드는 자신의 HoA와 그에 대응하는 자신의 MAC주소를 Foreign Agent에 등록을 해놓습니다. 그래서 Foreign Agent는 해당 HoA를 보고 그에 맞는 MAC 주소로 패킷을 흘려보내기만 하면 되는 것이죠!:smile:</p>
+
+<p>이런 식으로 Mobile IP가 동작하는 것입니다. 결과적으로, CN은 Home Network에게만 패킷을 보내게 되기 때문에 모바일 노드가 어디 있는지, 네트워크 주소는 무엇인지를 알 수가 없습니다. ‘Transparency`를 보장하게 되는 것이지요. 이런 식으로 전국 곳곳에 Foreign Network, 그리고 그것을 관장하는 Foreign Agnet가 퍼져있어 우리는 편리하게 데이터를 쓸 수 있는 것입니다.</p>
+
+<h2 id="mobile-ip-방식의-비효율성">Mobile IP 방식의 비효율성</h2>
+
+:ET
