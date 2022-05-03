@@ -1,7 +1,0 @@
-I"<p>우리가 자주 쓰는 스마트폰에서 데이터를 쓰는 것이 어떻게 가능할까? 즉, 모바일 단말에서는 어떻게 네트워크가 이루어질까?</p>
-
-<h1 id="모바일-네트워크가-쉽지-않은-이유">모바일 네트워크가 쉽지 않은 이유</h1>
-
-<p>애초에 <code class="language-plaintext highlighter-rouge">IP addressing</code>은 호스트가 하나의 네트워크 안에 <code class="language-plaintext highlighter-rouge">Stationary</code>하게 위치해있는 것을 기준으로 만들어졌습니다. 어떠한 IP주소 또한 그 주소에 해당하는 네트워크 안에 위치할 때 <code class="language-plaintext highlighter-rouge">Valid</code>한 상태가 되는 것이 당연합니다. 그러나, 모바일 노드는</p>
-
-:ET

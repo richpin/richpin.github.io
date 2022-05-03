@@ -1,5 +1,0 @@
-I"m<p>우리가 자주 쓰는 스마트폰에서 데이터를 쓰는 것이 어떻게 가능할까요? 즉, 모바일 단말에서는 어떻게 네트워크가 이루어질까요?</p>
-
-<p>애초에 <code class="language-plaintext highlighter-rouge">IP addressing</code>은 호스트가 하나의 네트워크 안에 <code class="language-plaintext highlighter-rouge">Stationary</code>하게 위치해있는 것을 기준으로 만들어졌습니다. 어떠한 IP주소 또한 그 주소에 해당하는 네트워크 안에 위치할 때 <code class="language-plaintext highlighter-rouge">Valid</code>한 상태가 되는 것이 당연합니다. 그러나, 모바일 노드는 계속해서 네트워크를 옮겨 다닙니다. 그리고 네트워크가 바뀌기 때문에 원할한 네트워킹을 위해서는 <strong>주소 또한 그에 맞게 바뀌어야 하는 것이지요.</strong> 가장 확실한 방법은 재부팅을 하는 것입니다. 그러나 움직이면서 네트워크가 바뀔 때마다 폰을 재부팅한다는 것은 상상만 해도 끔찍한 일이 아닐 수 없습니다. 또 하나의 문제는, 전송이 일어나는 도중에 네트워크가 바뀌게 되면, 데이터 교환에 있어 차질이 생기게 되는 것이지요. <code class="language-plaintext highlighter-rouge">WIFI</code>는 지원하지 못하는 이러한 <code class="language-plaintext highlighter-rouge">Mobility</code> 문제를 해결하기 위해 <code class="language-plaintext highlighter-rouge">Mobile IP</code> 프로토콜이 생기게 되었고, 그 예로 우리가 현재 사용하고 있는 LTE 등이 있는 것입니다.</p>
-
-:ET

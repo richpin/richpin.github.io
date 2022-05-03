@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[Network] Network Address Translation"
+title: "[Network] Network Address Translation(NAT)"
 description: IP 주소를 더 효율적으로 사용하기 위한 NAT를 알아보자.
 img: nat_img.jpeg
 tags: [Network]
