@@ -22,7 +22,7 @@ tags: [Network]
 
 - IPv6에서는 기존 IPv4의 32비트에서 4배나 많은 128비트의 주소로 아주 많은 주소를 포함할 수 있게 되었습니다. 
 - 네트워크와 주소와 호스트 주소를 각각 64비트로 지정해두어 `Routing Scalability`를 향상시켰습니다.
-- 중앙 집중식인 `DHCP` 방식을 제거하였습니ㅏㄷ..
+- 중앙 집중식인 `DHCP` 방식을 제거하였습니다.
 - NAT에서 배웠듯이 PORT 번호는 4계층이라 3계층 IP에서 확인을 하지 못한다는 것을 기억하시죠? 그래서 IPv6는 이를 위해 `Type of service(TOS)`를 확장시켰습니다.
 - `Hedaer Legnth` 확인을 피하기 위해 `IP option`을 제거하고 20바이트로 헤더를 고정시켰습니다.
 - NAT가 필요 없어졌기 때문에 `End-to-End` 개념을 다시 찾아왔습니다.
@@ -42,7 +42,7 @@ IPv6의 헤더는 아래와 같이 생겼습니다. Field 하나씩 천천히 �
 
 **Version**은 IPv4의 헤더의 Version과 동일합니다. `4 bits`로 이루어졌으며, IPv6이기 때문에 값이 6이어야 합니다.
 
-**Traffic Class**는 `8 bits`로 이루어져 있으며, IPv4의 `ToS`와 비슷합니다. Traffic Class는 `Source Node`가 패킷의 트래픽 클래스 및 등급(우선순위)을 구분하기 위해 적습니다. 예를 들어, Router는 Delay에 더 예민한 Voice 패킷임을 이 Traffic Class를 통해 확인한 뒤 먼저 Forwarding 해줍니다.
+**Traffic Class**는 `8 bits`로 이루어져 있으며, IPv4의 `ToS`와 비슷합니다. Traffic Class는 `Source Node`가 패킷의 트래픽 클래스 및 등급(우선순위)을 구분하기 위해 적습니다. 
 
 **Flow Label**은 하나의 `Flow`를 구분하기 위해 사용되며 `20 bits`로 이루어져 있습니다. 전에는 Connection을 분류하는 `5 tuples` 중 3계층 IP에서는 Port 번호에 대한 정보가 없어 트래픽을 분류하기 굉장히 어려웠습니다. 이를 위해 하나의 Connection 패킷 그룹들을 구분하여 Router에서는 뒤에 오는 패킷이 이 정보가 같다면 바로 이전 패킷과 동일하게 흘려보내기 때문에 Processing이 효율적이게 됩니다.
 
@@ -64,7 +64,7 @@ IPv6에는 아래와 같이 여러 `Extension Header`들이 존재합니다.
 
 그렇다면 내가 패킷을 전송하는 모든 경로에 있는 노드들이 물리적으로 1500 bytes, 아니 오히려 패킷이 가질 수 있는 65,535 bytes보다 크다는 것을 안다면? 훨씬 크게 패킷을 보낼 수도 있는 것 아닐까요? 그래서 나온 것이 Jumbo Payload입니다. `32 bits Unsigned Integer`로 MTU를 최대 4GB까지 설정할 수 있도록 만들어 줍니다. 기본적으로 Jumbo를 사용할 경우 Default MTU는 `9000 bytes`가 되게 됩니다. 물론, 경로의 어느 한 노드라도 이 MTU를 지원하지 않는다면 가차없이 버려지게 됩니다.:joy:
 
-**Fragmentation Header**는 IPv4와 크게 다르지 않습니다. IPv6에서는 Source와 Destination에서만 Fragmentation이 이루어진다는 점을 명심합시다. Router의 Fragmentation을 없애기 위해 `TCP`에서 애초에 MTU보다 작게 패킷을 잘라 보내기 때문에 `Don't Fragment(DF) bit`를 제거하였으며, `More Fragment(MF) bit`만이 남아 있습니다. 알아 두어야 할 것은 정말 혹여나! TCP에서 패킷을 자르는 데 있어 오류가 발생하거나 경로를 타고 봤더니 실제 MTU보다 클 때 3계층 IP에서 Fragmentationd을 해야 **할 수도**있기 때문에 이와 같이 Header가 존재하는 것입니다.
+**Fragmentation Header**는 IPv4와 크게 다르지 않습니다. IPv6에서는 Source와 Destination에서만 Fragmentation이 이루어진다는 점을 명심합시다. Router의 Fragmentation을 없애기 위해 `TCP`에서 애초에 MTU보다 작게 패킷을 잘라 보내기 때문에 `Don't Fragment(DF) bit`를 제거하였으며, `More Fragment(MF) bit`만이 남아 있습니다. 알아 두어야 할 것은 정말 혹여나! TCP에서 패킷을 자르는 데 있어 오류가 발생하거나 경로를 타고 봤더니 실제 MTU보다 클 때 3계층 IP에서 Fragmentationd을 해야 **할 수도** 있기 때문에 이와 같이 Header가 존재하는 것입니다.
 
 IPv4에서는 Option Field가 IP Header에 포함되어 있었기 때문에, Forwarding Performance에 악영향을 미쳣습니다. 그러나 IPv6에서는 이와 같이 여러 옵션들이 **External** 하게끔 IPv6 Header로부터 분리되었습니다. 그러나 위에서 설명한 Hop-by-hop Options Header를 제외하고는 Router에서는 모든 Extension Header들을 확인하지 않아도 됩니다. 그러한 이유로 Hop-by-hop Options Header는 항상 IPv6 Header 뒤에 위치하여야 합니다. 또한, IPv6의 **Next Header**가 이러한 Extension Header들에게도 달려있어 다음 헤더가 무엇인지를 가리키는 아래와 같은 구조를 취하게 되는 것입니다.
 
@@ -128,6 +128,8 @@ IPv6에는 주소 자체에 기본적으로 `Format Prefix`가 존재합니다. 
 
 이와 같은 Level에 따른 비트는 구별을 위해 그 비트 전체를 사용하는 것은 아닙니다. 위와 같이 그 비트를 또 쪼개고 쪼개 Aggregation을 최적화할 수 있습니다. 추가적으로 우리가 기억할 것이 있습니다. 주소가 상단으로 이동할수록 Prefix는 /64, /60, /56, /52, /48과 같이 무조건 **4비트**씩 쪼개지는데 이를 `Nibble Boundaries`라고 합니다.
 
+![multicast](/assets/img/network_ipv6/multicast.png){: width="55%" height="55%"}
+
 이제 `Multicast Address`에 대해 알아봅시다. 첫 8비트가 모두 1이며 Flags 영역은 Permanently-assigned(well-known) 주소라면 1. `Non-permanently-assgined(transient)`라면 1은 표기합니다. 대부분은 이미 정해져 있기 때문에 0을 가진다고 생각해도 무방합니다. Scope 부분은 우리가 Multicast를 하고 싶은 범위에 따라 위의 표와 같은 비트를 표기합니다. 여기서 Organization-local은 여러 Site들을 묶어놓은 영역이며, Node-local은 loopback과 같이 자신의 호스트내에서 벗어나지 않는 영역을 의미합니다. 그림으로 쉽게 표현한 것은 아래와 같습니다.
 
 ![scope](/assets/img/network_ipv6/scope.png){: width="45%" height="45%"}
@@ -141,7 +143,7 @@ IPv6에는 주소 자체에 기본적으로 `Format Prefix`가 존재합니다. 
 이와 같은 IPv6의 장점을 크게 6개로 추려서 이야기 해보겠습니다.
 1. Routing Table 크기가 작아지고 Fragmentation이 사라지면서 Routing의 Efficiency가 올라갔습니다.
 2. Packet Header가 간단해지면서 Packet Processing의 Efficiency가 올라갔습니다.
-3. Broadcast가 사라지고 Multicast를 사용하면서 관련 없는 호스트들은 계속해서 쉴 수 있습니ㅏㄷ.
+3. Broadcast가 사라지고 Multicast를 사용하면서 관련 없는 호스트들은 계속해서 쉴 수 있습니다.
 4. Auto-Configuration의 사용으로 Network Configuration이 간단해졌습니다.
 5. NAT를 없애서 End-to-End를 달성했습니다.
 6. `IPsec`으로 Confidentiality, Authentication, Integrity를 보장합니다.

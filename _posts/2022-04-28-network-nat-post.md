@@ -15,7 +15,7 @@ IP가 부족해지면서 여러 해결책들이 도입된 것을 이전에 언�
 - 172.16.0.0/12
 - 192.168.0.0/16
 
-설명하자면, 그 사설 주소를 Routing이 가능한 외부 공인 IP 주소로 Translate 해주는 것이 NAT라고 할 수 있습니다. 다음 그림과 같이 Routing이 가능한 하나의 `Stub Network(Private Address Space)`의 edge에 NAT 기능이 들어간 `Border Router`를 다는 것으로 주로 사용됩니다. Space 내부에서는 `private(local) address`, 외부에서는 `public(official) address`를 사용하는 것입니다.
+설명하자면, 그 사설 주소를 Routing이 가능한 외부 공인 IP 주소로 변환해주는 것이 NAT라고 할 수 있습니다. 다음 그림과 같이 Routing이 가능한 하나의 `Stub Network(Private Address Space)`의 edge에 NAT 기능이 들어간 `Border Router`를 다는 것으로 주로 사용됩니다. Space 내부에서는 `private(local) address`, 외부에서는 `public(official) address`를 사용하는 것입니다.
 
 ![nat-background](/assets/img/network_nat/nat_background.png){: width="50%" height="50%"}
 
@@ -43,7 +43,7 @@ IP가 부족해지면서 여러 해결책들이 도입된 것을 이전에 언�
 
 ![nat-pool](/assets/img/network_nat/nat_pool.png){: width="50%" height="50%"}
 
-그러나, 우리는 대부분 정적인 방식보다 동적인 방식에 더 효율성을 느낍니다. 동적 방식은 보유하고 있는 공인 IP 주소의 `Pool`에서 호스트의 요청이 올 경우 동적으로 IP를 할당해 줍니다. 아무래도 정적인 방식은 하나의 공인 IP로 호스트들의 요청이 동시에 쏟아지게 되면 하나를 제외한 나머지 호스트들이 놀고 있어야 할텐데, 동적인 방식은 정해진 게 없어 남은 공인 IP를 할당해주면 되기 때문에 조금 더 대처에 유연합니다.
+그러나, 우리는 대부분 정적인 방식보다 동적인 방식에 더 효율성을 느낍니다. 동적 방식은 보유하고 있는 공인 IP 주소의 `Pool`에서 호스트의 요청이 올 경우 동적으로 IP를 할당해 줍니다. 아무래도 정적인 방식은 하나의 공인 IP와 mapping된 호스트들의 요청이 동시에 쏟아지게 되면 하나를 제외한 나머지 호스트들이 놀고 있어야 할텐데, 동적인 방식은 정해진 게 없어 남은 공인 IP를 할당해주면 되기 때문에 조금 더 대처에 유연합니다.
 
 # PORT ADDRESS TRANSLATION(PAT)
 
@@ -68,7 +68,7 @@ PAT는 기본적으로 packet이 나갈 때 자신의 사설 주소를 공인 �
 
 **그렇다면 서버가 사설 주소를 이용할 때는 어떨까요?**
 
-서버는 packet이 들어오는 것으로 시작하기 때문에 **PAT 과정을 거치지 않습니다.** 그래서 `Static`하게 mapping해놓은 것을 참고하여 `Private Space`로 `Forwarding`해야 하는데 이를 `Port Forwarding`이라고 합니다. 조금 더 깊게 생각해보면 Static PAT에서 들어오는 packet을 Forwarding하는 과정과 Port Forwarding이 비슷하다는 것을 느낄 수 있을 겁니다. 어떻게 보면 PAT와 Port Forwarding에는 교집합이 존재할 수 있는 것이죠. 그러나 PAT는 처음 나가는 과정에서 사설 주소를 공인 주소로 `Translation`한다는 점에서 명확한 차이를 가집니다. Port Forwaring은 단순히 `Forwarding`하는 과정만을 의미하는 것이지요.
+서버는 packet이 들어오는 것으로 시작하기 때문에 **PAT 과정을 거치지 않습니다.** 그래서 `Static`하게 mapping해놓은 것을 참고하여 `Private Space`로 `Forwarding`해야 하는데 이를 `Port Forwarding`이라고 합니다. 조금 더 깊게 생각해보면 Static PAT에서 들어오는 packet을 Forwarding하는 과정과 Port Forwarding이 비슷하다는 것을 느낄 수 있을 겁니다. 그러나 PAT는 처음 나가는 과정에서 사설 주소를 공인 주소로 `Translation`한다는 점에서 명확한 차이를 가집니다. Port Forwaring은 단순히 `Forwarding`하는 과정만을 의미하는 것이지요.
 
 ![port-forwarding](/assets/img/network_nat/port_forwarding.png){: width="70%" height="70%"}
 

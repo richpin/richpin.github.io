@@ -17,7 +17,7 @@ tags: [Network]
 
 Mobile IP에서 인터넷과 연결된 네트워크에는 크게 두 가지가 있습니다. `Home Network(HN)`은 폰을 처음 등록하는 변하지 않는 `Permanent`한 네트워크 입니다. 즉 우리가 가입을 하면 통신사에서 처음 딱 한 번 정해주는 말뚝과 같은 통신사의 네트워크인 것이죠. 그리고 `Foreign Network`는 모바일이 움직일 때마다 그 곳에 해당하는 네트워크를 지칭하는 것으로, 계속해서 바뀌는 `Temporary`한 네트워크입니다. Home Network에서 쓰는 주소를 `Home Address(HoA)`, Foreign Network에서 쓰는 모바일 노드의 주소를 `Care-of-address(COA)`라고 합니다. 추가적으로, Home Network와 연결된 라우터를 `Home Agent(HA)`, Foreign Network와 연결된 라우터를 `Foreign Agent(FA)`라고 하며 이 둘은 인터넷으로 연결되어 활발한 통신을 수행합니다.
 
-이제 과정을 순서대로 알아볼까요? 추가적으로, 여기서는 우리의 스마트폰을 `Mobile Node(MN)', 우리가 인터넷을 통해 Connection을 맺으려 하는 노드를 `Correspondent Node(CN)`이라고 합시다.
+이제 과정을 순서대로 알아볼까요? 추가적으로, 여기서는 우리의 스마트폰을 `Mobile Node(MN)`, 우리가 인터넷을 통해 Connection을 맺으려 하는 노드를 `Correspondent Node(CN)`이라고 합시다.
 
 먼저 가장 편한 상황입니다. 노드가 Home Network에 있는 상황입니다.
 
@@ -43,7 +43,7 @@ CN은 바로 Foreign Agent로 보내는 것이 아닌. Home Agent로 패킷을 �
 
 그런데 이런! 당연하게도 Destination이 여전히 HoA를 가리키고 있네요. 상관없습니다! Foreign Agent에서 모바일 노드까지는 전달을 **2계층** `MAC`에서 하기 때문입니다. 아까 모바일 노드에 HoA가 이미 등록이 되었다는 점을 명시했었죠? 처음 Foreign Network로 이동해 Foreign Agent로부터 CoA를 받을 때 모바일 노드는 자신의 HoA와 그에 대응하는 자신의 MAC주소를 Foreign Agent에 등록을 해놓습니다. 그래서 Foreign Agent는 해당 HoA를 보고 그에 맞는 MAC 주소로 패킷을 흘려보내기만 하면 되는 것이죠!:smile:
 
-이런 식으로 Mobile IP가 동작하는 것입니다. 결과적으로, CN은 Home Network에게만 패킷을 보내게 되기 때문에 모바일 노드가 어디 있는지, 네트워크 주소는 무엇인지를 알 수가 없습니다. 'Transparency`를 보장하게 되는 것이지요. 이런 식으로 전국 곳곳에 Foreign Network, 그리고 그것을 관장하는 Foreign Agnet가 퍼져있어 우리는 편리하게 데이터를 쓸 수 있는 것입니다. 
+이런 식으로 Mobile IP가 동작하는 것입니다. 결과적으로, CN은 Home Network에게만 패킷을 보내게 되기 때문에 모바일 노드가 어디 있는지, 네트워크 주소는 무엇인지를 알 수가 없습니다. `Transparency`를 보장하게 되는 것이지요. 이런 식으로 전국 곳곳에 Foreign Network, 그리고 그것을 관장하는 Foreign Agnet가 퍼져있어 우리는 편리하게 데이터를 쓸 수 있는 것입니다. 
 
 ## Mobile IP 방식의 Inefficiency
 
