@@ -1,0 +1,9 @@
+I" 	<p>이번 시간에는 4계층 Transport Layer에서 가장 많이 들리는 <code class="language-plaintext highlighter-rouge">TCP</code>에 대해서 알아보는 시간을 가지도록 하겠습니다.</p>
+
+<p>먼저, 당연하게도 TCP는 Transport Layer의 특성인 <code class="language-plaintext highlighter-rouge">Multiplexing</code>을 가집니다. 즉, 많은 Flow들이 서로 같은 링크(길)들을 공유하면서 지나가는 것이죠. 자동차 도로를 보더라도 많은 다른 자동차들이 간격만 유지한다면 다 같은 경로로 가는 것이 가능하죠? 네트워크 링크에서 패킷들도 마찬가지인 겁니다. TCP가 가지는 고유하는 특성은 <code class="language-plaintext highlighter-rouge">Byte-oriented</code>를 꼽을 수 있습니다. 패킷이 바이트 단위로 구성되있다는 것이죠. 그리고 그 바이트들은 서로를 구별하기 위해 <code class="language-plaintext highlighter-rouge">Label</code>을 가집니다. 그리고 이 바이트들이 모인 단위를 또 하나의 <code class="language-plaintext highlighter-rouge">Segment</code>라 칭합니다. <code class="language-plaintext highlighter-rouge">UDP</code>는 하나의 Message를 그 자체를 단위로 삼는 <code class="language-plaintext highlighter-rouge">Message-oriented(Chunk-oriented)</code>를 가지는 것과의 차이점이라 할 수 있습니다. 또한 TCP는 Connection의 <code class="language-plaintext highlighter-rouge">State</code>를 보유할 수 있지만, UDP에는 그런 것은 존재하지 않습니다.</p>
+
+<p><img src="/assets/img/network_tcp/byte_stream.png" alt="byte_stream" width="50%" height="50%" /></p>
+
+<p>위의 그림은 TCP를 사용하는 2개의 프로세스가 Conncection하는 장면을 나타낸 것입니다. 마치 서로의 프로세스가 하나의 <code class="language-plaintext highlighter-rouge">Tube</code>로 연결된 모습이죠? 이 튜브 내부에서는 수많은 <code class="language-plaintext highlighter-rouge">Byte Stream</code>이 흐르고 있으며, 이 바이트 스트림의 흐름은 하나의 <code class="language-plaintext highlighter-rouge">Chunk</code> 단위로 툭툭 쪼개질 수 있는데 그 쪼개진 단위를 <code class="language-plaintext highlighter-rouge">Segment</code>라 합니다.</p>
+
+:ET
