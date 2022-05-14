@@ -61,6 +61,14 @@
 <lastmod>2022-05-09T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>/network-tcp-control-post/</loc>
+<lastmod>2022-05-10T00:00:00+09:00</lastmod>
+</url>
+<url>
+<loc>/os-limited-direct-execution-post/</loc>
+<lastmod>2022-05-14T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>/</loc>
 </url>
 <url>
@@ -68,5 +76,8 @@
 </url>
 <url>
 <loc>/page/2/</loc>
+</url>
+<url>
+<loc>/page/3/</loc>
 </url>
 </urlset>

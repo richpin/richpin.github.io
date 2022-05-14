@@ -20,7 +20,7 @@ TCP는 `Error/Loss` 감지합니다. 먼저 TCP 헤더에는 Checksum이 있어�
 
 ![sr_buffer](/assets/img/network_tcp/sr_buffer.png){: width="50%" height="50%"}
 
-위와 같이 각각의 프로세스는 Connection마다 각자의 `Sending Buffer`와 `Receiving Buffer`을 가집니다. 그래서 보냈던 패킷을 이 Buffer에 저장해서 다시 재전송하는 것이 가능해지는 것이지요. 또한, 애초에 보내는 속도와 받는 속도가 같을 수가 없기 때문에 임시로 쌓아놓기 위해서도 결과적으로 Buffer가 필요할 수밖에 없습니다. IP에서는 줄줄 흐르는 Byte Stream의 형태로 데이터를 전송하는 것이 불가능하기 때문에, TCP가 이를 Segment 단위로 자릅니다. 그리고 TCP는 그 Segment앞에 자기 자신의 TCP 헤더를 붙여 IP에 전달하게 되고 그걸 IP가 또 자기 자신의 IP 헤더로 Encapsulation해서 전송을 하게 되는 것이지요.
+위와 같이 각각의 프로세스는 `Connection마다` 각자의 `Sending Buffer`와 `Receiving Buffer`을 가집니다. 그래서 보냈던 패킷을 이 Buffer에 저장해서 다시 재전송하는 것이 가능해지는 것이지요. 또한, 애초에 보내는 속도와 받는 속도가 같을 수가 없기 때문에 임시로 쌓아놓기 위해서도 결과적으로 Buffer가 필요할 수밖에 없습니다. IP에서는 줄줄 흐르는 Byte Stream의 형태로 데이터를 전송하는 것이 불가능하기 때문에, TCP가 이를 Segment 단위로 자릅니다. 그리고 TCP는 그 Segment앞에 자기 자신의 TCP 헤더를 붙여 IP에 전달하게 되고 그걸 IP가 또 자기 자신의 IP 헤더로 Encapsulation해서 전송을 하게 되는 것이지요.
 
 이와 더불어, TCP는 송/수신이 각각 다른 독립적인 링크에서 일어나 양방향 통신이 동시에 일어날 수 있기에 `Full-duplex Service`라고 불립니다. 또한, 아까 두 개의 프로세스가 하나의 튜브로 연결되어 있는 그림을 보셨죠? 이와 같이 양쪽이 송수신 전에 확실하게 Connection을 맺기 때문에 `Connection-oriented Service`라고 불립니다. 그리고 간단히 언급하였듯이 `Acknowledgment`를 이용해 데이터의 도착이 안전하고 알맞게 일어났는 지를 보장할 수 있기에 `Reliable Service`이기도 합니다.
 
