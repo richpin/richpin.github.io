@@ -1,0 +1,20 @@
+I"8
+<p>이번 시간에는 네트워크의 성능을 어떻게 알아볼 수 있을지 알아보도록 합시다.</p>
+
+<h1 id="bandwidth">Bandwidth</h1>
+
+<p>가장 먼저 <code class="language-plaintext highlighter-rouge">Bandwidth</code>란 초당 전송되는 비트 수, 즉 <code class="language-plaintext highlighter-rouge">Number of bits per second(bps)</code>입니다. 많은 사람들이 착각하는 것은 Bandwidth로 속도를 측정한다는 것입니다. 그게 아니라 데이터가 흐르는 파이프의 직경이라는 뜻에 더 걸맞습니다.</p>
+
+<p><img src="/assets/img/network-performance/bandwidth_pipe.png" alt="bandwidth_pipe" width="50%" height="50%" /></p>
+
+<p>위와 같이, 물이 파이프를 타고 배수될 수 있을 때, 파이프의 직경이 크다면 속도가 늘어나나요? 실제로 물 단위의 속도, 즉 전송되는 데이터의 단위의 속도 자체에는 영향이 없습니다. 그렇지는 않지만 빠지는 물의 양은 늘어나겠지요? 그러나, 같은 <strong>양</strong>의 물이 빠지는 데, 즉 같은 크기가 데이터가 이동하는 데 걸리는 시간은 더 짧아지겠죠. 같은 양이 전송되는 데 걸리는 시간이 더 짧다면 속도가 높은 게 아니냐구요? 파이프가 흐르는 속도와 어떤 양이 전송되는 속도는 서로 다른 개념입니다.</p>
+
+<p>네트워크로 다시 넘어온다면 현 시대에 데이터, 즉 비트는 빛으로 움직이죠? 따라서 파이프가 흐르는 속도는 <strong>빛의 속도</strong> 이고, 어떤 양이 전송되는 속도는 다운로드 되는 속도를 의미하는 것이죠. 따라서 이 Bandwidth는 속도라는 개념에 직접적으로 관여하지는 않지만, 다운로드와 같은 양적인 개념에 사용됩니다. 바로 다음 내용에서 설명하곘습니다.</p>
+
+<h1 id="latency">Latency</h1>
+
+<p><code class="language-plaintext highlighter-rouge">Latency</code>는 데이터가 이동하는 데 걸리는 시간을 통칭적으로 뜻하는 개념입니다. 아까 데이터의 속도는 언제나 빛의 속도라고 말씀 드렸죠? 그럼 예를 들어봅시다. 4320km 만큼 떨어져 있는 곳끼리 데이터를 주고 받는 데 걸리는 시간은 빛의 속도인 200,000km/s를 나눈 21.6ms가 될 겁니다. 따라서 이상적으로 Latency가 21.6ms가 되고, 그로 인해 RTT는 43.2ms가 되곘지요. 하지만 실제 값은 이보다 크답니다. 아래의 그림을 보시죠.</p>
+
+<p><img src="/assets/img/network-performance/actual_latency.png" alt="actual_latency" width="50%" height="50%" /></p>
+
+:ET

@@ -66,7 +66,7 @@ flag도 따로 있고 무엇보다 공유되는 `turn`이라는 변수가 있어
 
 ![test-and-set-ex](/assets/img/os_locks/test_and_set_example.png){: width="50%" height="50%"}
 
--> 이렇게 된다면 확실하게 correctness를 보장할 수 있을 것입니다. 다만, 어떠한 스레드가 Spinning을 반복하고 있을 수 있기 때문에 Fairness측면을 여전히 극복하지는 못합니다. 또한, **Spin Locks**의 특성 상 Multiple CPU에서는 잘 돌아가겠지만 `Single CPU`인 경우에는 CPU 사이클이 남용되어 `high overhead`를 유발하게 됩니다.:sad:
+-> 이렇게 된다면 확실하게 correctness를 보장할 수 있을 것입니다. 다만, 어떠한 스레드가 Spinning을 반복하고 있을 수 있기 때문에 Fairness측면을 여전히 극복하지는 못합니다. 또한, **Spin Locks**의 특성 상 Multiple CPU에서는 잘 돌아가겠지만 `Single CPU`인 경우에는 CPU 사이클이 남용되어 `high overhead`를 유발하게 됩니다.:sob:
 
 ## Compare-And-Swap
 
@@ -103,7 +103,7 @@ Lock을 걸어 Critical Section을 실행 중인데도 우선순위가 밀려 �
 
 ![yield_ex](/assets/img/os_locks/yield_example.png){: width="50%" height="50%"}
 
-다만 잦은 Context Switching으로 인해 `High Cost`가 발생하며 자칫 계속해서 yield 반복해 scheduling 되지 못하는 `Starvation Problem`이 발생할 수 있습니다.
+다만 잦은 Context Switching으로 인해 `High Cost`가 발생하며, 다른 스레드가 Critical Section에서 반복해서 들어갔다 나오는 동안 계속해서 yield를 반복해 scheduling 되지 못하는 `Starvation Problem`이 발생할 수 있습니다.
 
 ## Queue를 이용한 방법
 

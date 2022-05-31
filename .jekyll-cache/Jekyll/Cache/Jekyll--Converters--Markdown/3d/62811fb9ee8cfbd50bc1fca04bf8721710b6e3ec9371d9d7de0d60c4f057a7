@@ -1,4 +1,4 @@
-I" 4<p>이번에는 저번시간에 이어 Lock에 대해 더 자세히 알아보는 시간을 가져봅시다.</p>
+I"s4<p>이번에는 저번시간에 이어 Lock에 대해 더 자세히 알아보는 시간을 가져봅시다.</p>
 
 <h1 id="lock이란-무엇일까">Lock이란 무엇일까?</h1>
 
@@ -63,7 +63,7 @@
 
 <p><img src="/assets/img/os_locks/test_and_set_example.png" alt="test-and-set-ex" width="50%" height="50%" /></p>
 
-<p>-&gt; 이렇게 된다면 확실하게 correctness를 보장할 수 있을 것입니다. 다만, 어떠한 스레드가 Spinning을 반복하고 있을 수 있기 때문에 Fairness측면을 여전히 극복하지는 못합니다. 또한, <strong>Spin Locks</strong>의 특성 상 Multiple CPU에서는 잘 돌아가겠지만 <code class="language-plaintext highlighter-rouge">Single CPU</code>인 경우에는 CPU 사이클이 남용되어 <code class="language-plaintext highlighter-rouge">high overhead</code>를 유발하게 됩니다.:sad:</p>
+<p>-&gt; 이렇게 된다면 확실하게 correctness를 보장할 수 있을 것입니다. 다만, 어떠한 스레드가 Spinning을 반복하고 있을 수 있기 때문에 Fairness측면을 여전히 극복하지는 못합니다. 또한, <strong>Spin Locks</strong>의 특성 상 Multiple CPU에서는 잘 돌아가겠지만 <code class="language-plaintext highlighter-rouge">Single CPU</code>인 경우에는 CPU 사이클이 남용되어 <code class="language-plaintext highlighter-rouge">high overhead</code>를 유발하게 됩니다.:sob:</p>
 
 <h2 id="compare-and-swap">Compare-And-Swap</h2>
 
@@ -100,7 +100,7 @@
 
 <p><img src="/assets/img/os_locks/yield_example.png" alt="yield_ex" width="50%" height="50%" /></p>
 
-<p>다만 잦은 Context Switching으로 인해 <code class="language-plaintext highlighter-rouge">High Cost</code>가 발생하며 자칫 계속해서 yield 반복해 scheduling 되지 못하는 <code class="language-plaintext highlighter-rouge">Starvation Problem</code>이 발생할 수 있습니다.</p>
+<p>다만 잦은 Context Switching으로 인해 <code class="language-plaintext highlighter-rouge">High Cost</code>가 발생하며, 다른 스레드가 Critical Section에서 반복해서 들어갔다 나오는 동안 계속해서 yield를 반복해 scheduling 되지 못하는 <code class="language-plaintext highlighter-rouge">Starvation Problem</code>이 발생할 수 있습니다.</p>
 
 <h2 id="queue를-이용한-방법">Queue를 이용한 방법</h2>
 

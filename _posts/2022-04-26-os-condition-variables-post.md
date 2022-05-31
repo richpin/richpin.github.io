@@ -69,7 +69,7 @@ signal을 보낸다고 바로 `Running State`로 스레드가 실행되는 것�
 
 ![mesa-hoare](/assets/img/os-condition-variable/mesa_hoare.png){: width="50%" height="50%"}
 
-**Mesa-style** - 대부분의 실제 OS에도 작동하는 방식입니다. 시그널을 보내는 스레드가 `lock/processor`를 가지고 있는 것입니다. 즉 위 그림과 같이 시그널을 보내는 스레드가 lock까지 처리하기 위해 깨운 스레드도 Running이 아닌 Ready State로 유지(`Ready Queue에 들어가는 것`)하는 것입니다. 
+**Mesa-style** - 대부분의 실제 OS에도 작동하는 방식입니다. 시그널을 보내는 스레드가 `lock/processor`를 가지고 있는 것입니다. 즉 위 그림과 같이 시그널을 보내는 스레드가 lock까지 처리하기 위해 깨운 스레드도 Running이 아닌 Ready State로 유지(`Ready Queue에 들어가는 것`)하는 것입니다. 그렇기 때문에 Ready 상태에 있는 스레드들 중 가장 먼저 실행되는 스레드가 자신이 아닐 경우, 이 스레드는 깨어난 이유가 없어질 수 있는 것입니다. 이 예시에서는 가져갈 값이 이미 없는 거지요.
 
 **Hoare-style** - 이론에서 말하는 방식입니다. 시그널을 보내는 스레드가 `lock/processor`까지 깨운 스레드에게 넘겨주기 때문에 바로 Running하는 것이 가능합니다.
 

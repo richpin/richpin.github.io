@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[Network] TCP-Control"
-description: TCP의 핵심기능인 여러 Control을 
+description: TCP의 핵심기능인 여러 Control을 알아보자
 img: tcp_control.jpeg
 tags: [Network]
 ---
@@ -59,7 +59,7 @@ TCP는 `Reliable`한 프로토콜입니다. 그 말은 즉슨, 전체 스트림�
 
 ![lost_segments](/assets/img/network_tcp_control/lost_segments.png){: width="55%" height="55%"}
 
-다음으로 `Lost Segments`는 TCP가 동일 Segment를 재전송 함으로써 대응을 합니다. 그렇다면 어떻게 `Lost` 되었는지 판단할 수 있을까요? 바로 `Retransmission Timer(RTT)`를 사용합니다. 방금 전 말씀드렸던 시계가 바로 이 RTT를 의미합니다. 패킷을 보낸지 시간을 재서 일정 시간 동안 ACK가 오지 않으면 실제로 Lost이든 아니든 Lost라고 판단하는 것이지요. 위와 같이 Segment3에 `Time-out`이 발생해 다시 보내고 ACK를 받는 상황을 확인하실 수 있습니다.
+다음으로 `Lost Segments`는 TCP가 동일 Segment를 재전송 함으로써 대응을 합니다. 그렇다면 어떻게 `Lost` 되었는지 판단할 수 있을까요? 바로 `Retransmission Timer`를 사용합니다. 방금 전 말씀드렸던 시계가 바로 이 Timer를 의미합니다. 패킷을 보낸지 시간을 재서 일정 시간 동안 ACK가 오지 않으면 실제로 Lost이든 아니든 Lost라고 판단하는 것이지요. 위와 같이 Segment3에 `Time-out`이 발생해 다시 보내고 ACK를 받는 상황을 확인하실 수 있습니다.
 
 위와 같이 재전송을 하게 되면 `Duplicate Segments`가 발생하는데요. 이는 간단하게 Receiver의 TCP가 중복된 Segment중 하나를 버리고 그 나머지 하나에 대한 ACK를 보내면서 대응합니다.
 
@@ -69,7 +69,8 @@ TCP는 `Reliable`한 프로토콜입니다. 그 말은 즉슨, 전체 스트림�
 
 Sender는 이를 받아도 사실 재전송을 하지는 않습니다. 사실 이게 진짜 Lost인지, 아직 안 간건지, 아님 Receiver가 Ordering을 제대로 안한 건지...이유를 확신할 수 없기 때문입니다. Duplicate ACK마저 그냥 들어오는 대로 버려 버립니다. 경각심(?) 정도 가질 뿐이지요. 다음과 같은 사실을 기억해 둡시다.
 
-> TCP는 오직 Retransmission Timer의 Time-Out이 발생할 때만 재전송을 합니다.
+이 전에 TCP는 오직 `Retransmission Time-Out(RTO)`이 발생할 때만 Packet Drop으로 간주하여 재전송을 합니다. 근데 그러면 보통 RTO가 2초 정도인데 너무 오래 걸린다 이겁니다!:triumph: 
+>그래서 Van Jacobson이라는 남자는 동시에 Duplicate ACK가 n개 정도 발생하면 이 또한 Packet Drop으로 간주해서 재전송을 하자!라고 외칩니다. 그 덕분에 속도가 매우 빨라졌고, 그렇게 훗날 이 남자는 TCP의 전설로 남게 되었지요.
 
 반대로 `Lost Acknowledgment`가 발생할 수도 있겠죠? 
 
@@ -79,12 +80,40 @@ Sender는 이를 받아도 사실 재전송을 하지는 않습니다. 사실 �
 
 # TCP Retransmission Timer
 
-![retransmisiion_scenarios](/assets/img/network_tcp_control/retransmisiion_scenarios.png){: width="65%" height="65%"}
+![retransmisiion_scenarios](/assets/img/network_tcp_control/retransmisiion_scenarios.png){: width="70%" height="70%"}
 
-3가지의 재전송 시나리오는 이와 같습니다. 가장 왼쪽은 이상적인 평범한 시나리오이고, 가장 오른쪽은 방금 전에 설명하였던 시나리오 입니다. 가운데 시나리오를 봅시다. 이번에는 ACK가 Retransmission Time보다 늦게 와서 쓸데 없이 재전송을 하게 된 `Premature Timeout`상황입니다. ++++++++++
+3가지의 재전송 시나리오는 이와 같습니다. 먼저 가장 오른쪽은 방금 전에 설명하였던 시나리오 입니다. 그리고 가장 왼쪽을 보실까요? 가장 정석적인 Lost Acknowledgment이군요. ACK가 오지 않은채로 Time Out이 되어 재전송을 하고 이번엔 제대로 ACK를 받습니다. 그런데 시간이 이 경우는 시간이 오래 걸리겠죠. 뒤에 패킷에 대한 Cumulatvie ACK가 오면 넘어가는데 뒤에 보낸 패킷이 없어 다시 재전송에 대한 ACK를 기다려야 합니다. 
 
-RTT의 설정은 효율성을 위해 정말 중요한 요소로가 할 수 있습니다. 너무 작으면 쓸데없는 재전송이 늘어날 것이며, 그렇다고 너무 크게 되면 실제로 재전송을 해야 하는데 시간이 지연될 수 있기 때문이지요. 이러한 이유로 RTT는 `Adaptive` 해야 합니다. 
+가운데 시나리오를 봅시다. 이번에는 ACK가 Retransmission Time보다 늦게 와서 쓸데 없이 재전송을 하게 된 `Premature Timeout`상황입니다. 그러나 host는 늦게 온 이 ACK이 전에 보낸 패킷에 대한 건지 방금 재전송한 패킷에 대한 것인지 알 수 없습니다. 그래서 어찌 됬든 Receiver가 잘 받았을테니 재전송한 패킷의 ACK로 받아들여 빠르게 처리할 수 있는 것입니다. 당연히 뒤에온 ACk는 Duplicate ACK로 처리하여 버리게 됩니다.
 
+Timer의 설정은 효율성을 위해 정말 중요한 요소로가 할 수 있습니다. 너무 작으면 쓸데없는 재전송이 늘어날 것이며, 그렇다고 너무 크게 되면 실제로 재전송을 해야 하는데 시간이 지연될 수 있기 때문이지요. 이러한 이유로 Tiemr는 `Adaptive` 해야 합니다. 
+
+![adaptive_rtt](/assets/img/network_tcp_control/adaptive_rtt.png){: width="50%" height="50%"}
+
+Retransmission Timers는 `Round-Trip Time(RTT)`에 비례하여 측정됩니다. 여기서 RTT는 TCP가 `Timestamp Options`을 통해 하나의 Segment가 전송되고 ACK를 받는 시간 간격을 측정한 값을 의미합니다. 앞서 설명드렸듯이 호스트에서는 하나의 `Global`한 타이머가 매 **500ms**마다 종을 칩니다. 그래서 동시에 여러 Segment를 측정하는 것을 불가능하기 때문에 한 번의 RTT가 끝난 시점에서 가장 처음 보내는 Segment를 다시 측정 시작합니다. 그렇기 때문에 위 왼쪽 예시에서 Segment 3과 4는 측정에 포함되지 않는 것이지요. 그래서 새로운 값은 아래와 같은 수식으로 Adaptive하게 변경됩니다.
+
+> New RTT(Estimated RTT) = a(Previous RTT) + (1 - a)(Current RTT)
+
+하지만, 여기서 a 값이 0.9를 가리키기 떄문에 꽤나 보수적이라고 할 수 있습니다. 이렇게 보수적이면 Adaptive하다고 말하기도 힘들지요. 아래의 그림을 봅시다.
+
+![estimated_rtt](/assets/img/network_tcp_control/estimated_rtt.png){: width="60%" height="60%"}
+
+측정한 `Estimated RTT` 값이 실제 RTT들의 변화에 둔감한 게 보이시죠? 그래서 그 간격을 메꿔주기 위한 값으로 Jacobson은 `DevRTT(Deviation RTT)`를 도입했습니다.
+
+> DevRTT = (1 - B)DevRTT + B|SampleRTT - EstimatedRTT|
+> RT_ - EstimatedRTT + 4DevRTT
+
+위와 같이 측정 RTT와 실제 샘플 RTT의 값의 차이를 일정비율(B는 대부분 0.75)로 해서 DevRTT를 구성한 뒤 이를 더해줌으로써 최종적이 **RTO**값을 구할 수 있는 것입니다.
+
+### Exponential RTO Backoff
+
+![retransmission_rtt](/assets/img/network_tcp_control/retransmission_rtt.png){: width="45%" height="45%"}
+
+또한, 만약 ACK가 재전송에 의한 것이라면 이 RTT는 어떡할까요? 꽤나 애매하죠? 처음 보낸 시점부터 재야 할지...재전송한 시점부터 재야 할자...:laughing: 그래서 Karn이란 사람이 이러한 경우의 RTT는 적용하지 말자, 즉 무시하자고 했답니다. 
+
+그런데 말입니다. 정말 무시해도 될까요? 재전송은 오히려 RTO보다 ACK 응답 시간이 더 길어져서 보내기 때문에 RTO의 직접적인 영향을 받는데요? 자, 생각해봅시다. 만약 재전송으로 인한 RTT를 RTO에 적용시킨 다면 RTO를 늘려야할까요, 줄여야할까요? 당연히 늘려줘야겠죠! 줄어들면 재전송이 더더더 발생할 테니까요! 그렇다면 어떻게 해야하나...바로 수식에 적용하지는 않지만 재전송이 발생했을 시 RTO를 2배씩, 총 16번의 재전송이 있을 떄까지 늘려준 답니다. `Exponential Backoff`란 수용 가능한 속도를 점진적으로 찾기 위해 피드백을 사용하여 일부 프로세스의 속도를 곱셈적으로 줄이는 알고리즘을 의미하죠.
+
+# Congestion Control
 
 
 
