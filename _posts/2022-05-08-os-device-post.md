@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[OS] Device"
-description: Disk부터 SSD까지
+description: Disk부터 SSD까지 저장장치를 알아보자
 img: solid_state_drive.jpeg
 tags: [OS]
 ---

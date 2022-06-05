@@ -24,7 +24,7 @@ tags: [Network]
 
 ![actual_latency](/assets/img/network-performance/actual_latency.png){: width="50%" height="50%"}
 
-방금 전  설명드린 부분을 `Propagation Delay`라고 합니다. 그러나 실제로는 더 많은 Delay 요소들이 존재하지요. 대표적으로 `Transmission Delayd`가 있습니다.
+방금 전 설명드린 부분을 `Propagation Delay`라고 합니다. 그러나 실제로는 Router에서 작업하는 `Processing Delay`나 Router에서 나가는 패킷보다 더 많이 들어오는 패킷들을 Queue에 저장하기 위한 `Queueing Delay` 등 더 다양한 Delay 요소들이 존재하지요. 또한, 대표적으로 `Transmission Delayd`가 있습니다.
 
 ![transmission_delay](/assets/img/network-performance/transmission_delay.png){: width="50%" height="50%"}
 
