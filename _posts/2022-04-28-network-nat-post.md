@@ -2,7 +2,7 @@
 layout: post
 title: "[Network] Network Address Translation(NAT)"
 description: IP 주소를 더 효율적으로 사용하기 위한 NAT를 알아보자.
-img: nat_img.jpeg
+img: /title/nat_img.jpeg
 tags: [Network]
 ---
 
@@ -17,13 +17,13 @@ IP가 부족해지면서 여러 해결책들이 도입된 것을 이전에 언�
 
 설명하자면, 그 사설 주소를 Routing이 가능한 외부 공인 IP 주소로 변환해주는 것이 NAT라고 할 수 있습니다. 다음 그림과 같이 Routing이 가능한 하나의 `Stub Network(Private Address Space)`의 edge에 NAT 기능이 들어간 `Border Router`를 다는 것으로 주로 사용됩니다. Space 내부에서는 `private(local) address`, 외부에서는 `public(official) address`를 사용하는 것입니다.
 
-![nat-background](/assets/img/network_nat/nat_background.png){: width="50%" height="50%"}
+![nat-background](/assets/img/network/network_nat/nat_background.png){: width="50%" height="50%"}
 
 회사와 같은 곳에서 내부에서는 사설 IP 주소를 통하여 그들끼리 통신하고 회사 밖 인터넷은 회사의 IP로써 통신하는 구조에서 사용된다 볼 수 있겠습니다.
 
 # NAT는 어떻게 동작할까?
 
-![nat-how](/assets/img/network_nat/nat_how.png){: width="50%" height="50%"}
+![nat-how](/assets/img/network/network_nat/nat_how.png){: width="50%" height="50%"}
 
 위와 같은 그림으로 설명을 해보겠습니다. PC1과 Web Server와의 통신을 예로 들어보죠.
 1. PC1은 SRC IP에 자신의 사설 주소, DST IP에 Web Server의 IP주소를 적어 packet을 전송합니다. 
@@ -41,13 +41,13 @@ IP가 부족해지면서 여러 해결책들이 도입된 것을 이전에 언�
 
 ## DYNAMIC NAT
 
-![nat-pool](/assets/img/network_nat/nat_pool.png){: width="50%" height="50%"}
+![nat-pool](/assets/img/network/network_nat/nat_pool.png){: width="50%" height="50%"}
 
 그러나, 우리는 대부분 정적인 방식보다 동적인 방식에 더 효율성을 느낍니다. 동적 방식은 보유하고 있는 공인 IP 주소의 `Pool`에서 호스트의 요청이 올 경우 동적으로 IP를 할당해 줍니다. 아무래도 정적인 방식은 하나의 공인 IP와 mapping된 호스트들의 요청이 동시에 쏟아지게 되면 하나를 제외한 나머지 호스트들이 놀고 있어야 할텐데, 동적인 방식은 정해진 게 없어 남은 공인 IP를 할당해주면 되기 때문에 조금 더 대처에 유연합니다.
 
 # PORT ADDRESS TRANSLATION(PAT)
 
-![pat-example](/assets/img/network_nat/pat_example.png){: width="70%" height="70%"}
+![pat-example](/assets/img/network/network_nat/pat_example.png){: width="70%" height="70%"}
 
 그렇다 하더라도 STATIC이든 DYNAMIC이든 결국 공인 IP 주소가 결국 호스트의 개수보다 적을 수 밖에 없고, 이 때문에 동시에 들어오는 요청들을 모두 처리할 수가 없게 됩니다. 그렇다면 부족한 IP 주소를 해결하고자 하는 NAT의 취지마저 한 끝도 달라진 게 없는데요? 그래서 우리는 바로 `Port` 번호를 사용하게 됩니다. 동일한 IP를 여러 호스트들에게 할당 해주더라도 여기에 각자의 Port 번호를 사용하여 각각을 구분하는 것이지요! 호스트의 Port 번호는 `Random`하게 정해지기 때문에 왠만하면 서로 중복되지 않다는 것도 한 몫 합니다. 같은 IP여도 어차피 Router에서 나눠지니 성능에는 문제가 없겠지요?**(Port 번호는 구분 용도일 뿐이지, Translation 이후에도 값이 완전히 동일한 것은 보장하지 않습니다!)**그것이 바로 NAT의 확장자인 `PAT`인 것입니다. 네트워크 통신에 있어 각각의 `Connection`을 구분하는 요소에는 최소한 아래와 같은 5가지가 있습니다.
 
@@ -70,11 +70,11 @@ PAT는 기본적으로 packet이 나갈 때 자신의 사설 주소를 공인 �
 
 서버는 packet이 들어오는 것으로 시작하기 때문에 **PAT 과정을 거치지 않습니다.** 그래서 `Static`하게 mapping해놓은 것을 참고하여 `Private Space`로 `Forwarding`해야 하는데 이를 `Port Forwarding`이라고 합니다. 조금 더 깊게 생각해보면 Static PAT에서 들어오는 packet을 Forwarding하는 과정과 Port Forwarding이 비슷하다는 것을 느낄 수 있을 겁니다. 그러나 PAT는 처음 나가는 과정에서 사설 주소를 공인 주소로 `Translation`한다는 점에서 명확한 차이를 가집니다. Port Forwaring은 단순히 `Forwarding`하는 과정만을 의미하는 것이지요.
 
-![port-forwarding](/assets/img/network_nat/port_forwarding.png){: width="70%" height="70%"}
+![port-forwarding](/assets/img/network/network_nat/port_forwarding.png){: width="70%" height="70%"}
 
 보다 넓은 의미로는 말 그대로 **Port를 활용하여 Forwarding하는 과정** 자체를 Port Forwarding이라 칭합니다. 이와 같이 Port 번호로 구별되는 것을 활용해 인터넷은 아래와 같이 같은 IP여도 `Protocol`에 따라 Port 번호로 구별하여 사설 서버로 Forwarding을 하고 있습니다. (ex. HTTP = 80)
 
-![pf-egoing](/assets/img/network_nat/pf_egoing.png){: width="60%" height="60%"}
+![pf-egoing](/assets/img/network/network_nat/pf_egoing.png){: width="60%" height="60%"}
 
 다른 예로 `AP`에서 들어오는 packet이 연결되어 있는 디바이스 중 어떤 곳으로 Forwarding 되어야 하는지를 결정하기 위해 Port Forwarding을 사용합니다. 이런 Port Forwarding을 다른 말로는 `Port Mapping`이라 부릅니다.
 

@@ -2,7 +2,7 @@
 layout: post
 title: "[Network] Network Performance"
 description: 네트워크의 성능은 어떻게 결정될까?
-img: network_pipe.webp
+img: /title/network_pipe.webp
 tags: [Network]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title: "[Android] Recyclerview에 Header를 달기"
 description: "가장 간단명료했던 방법"
-img: drawing_banner.png
+img: /title/drawing_banner.png
 tags: [Android]
 ---
 

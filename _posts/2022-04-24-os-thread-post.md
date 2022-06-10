@@ -2,7 +2,7 @@
 layout: post
 title: "[OS] Thread(스레드)"
 description: Concurrency를 위한 Thread에 대해 알아보자
-img: thread_wiki.png
+img: /title/thread_wiki.png
 tags: [OS]
 ---
 
@@ -35,7 +35,7 @@ tags: [OS]
 데이터를 공유한다는 스레드의 가장 큰 특징은 사실 스레드의 가장 큰 약점이 되기도 합니다.
 아와 같은 상황을 생각해 봅시다.
 
-![uncontrolled_scheduling](/assets/img/os_thread/uncontrolled_scheduling.png){: width="60%" height="60%"}
+![uncontrolled_scheduling](/assets/img/os/os_thread/uncontrolled_scheduling.png){: width="60%" height="60%"}
 
 `counter = counter + 1`이라는 코드를 수행하는 과정입니다. 내부적으로 위와 같이 fetch하고 add연산한 뒤 store하는 일련의 어셈블리 과정을 내포하고 있죠. 그런데 만약 한 스레드가 fetch하고 add를 하는데 store를 하기 전에 다른 스레드로 context switching이 일어났다고 생각해 봅시다. 그렇다면 이 스레드는 전 스레드가 업데이트를 하기 전의 값을 fetch하게 됩니다. 결과적으로 두 스레드가 모두 store하는 값은 51로 같은 값이 되기 때문에 두 번의 연산으로 예상되는 결과가 벌어지지 않는 것입니다. 이를 `indeterminate`하다라고 표현하며 이와 같은 상황을 **Race Condition**이라고 합니다.
 
@@ -84,7 +84,7 @@ int rc = pthread_mutex_init(&lock, NULL); assert(rc == 0);
 
 어떠한 스레드가 다른 스레드와 관계성을 가지기 위해, 예를 들어 다른 스레드가 특정 조건을 만족할 때까지 기다려야 할 때 우리는 가장 먼저 아래와 같이 `Shared Variable`을 이용하는 방법을 생각해볼 수 있을 겁니다.
 
-![spin_exampel](/assets/img/os_thread/spin_example.png){: width="70%" height="70%"}
+![spin_exampel](/assets/img/os/os_thread/spin_example.png){: width="70%" height="70%"}
 
 ready라는 공유 변수를 이용해서 한 스레드는 다른 스레드가 `ready = 1`을 수행할 때까지 실행이 되어서는 안되는 것입니다. `while(ready == 0);`과 같이 기다리는 상황을 **Spin**이라고 표현합니다. 다만 이는 스레드가 `Running`일 때 계속해서 반복문을 수행하면서 CPU 사이클을 잡아먹고 에러까지 도출될 수가 있습니다. 그래서 pthread에서는 아래와 같은 Condition Variable을 제공합니다. 이 또한, 이후 포스트에서 제대로 다룰 예정이니 이쯤에서 넘어가도록 하겠습니다.:smile:
 

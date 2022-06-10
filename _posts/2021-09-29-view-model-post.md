@@ -2,7 +2,7 @@
 layout: post
 title: "[Android] 더 나은 architecture을 위한 필수템, ViewModel"
 description: "이제는 알아야 하는 ViewModel!!!"
-img: MVVM_Pattern.png
+img: /title/MVVM_Pattern.png
 tags: [Android]
 ---
 
@@ -15,7 +15,7 @@ Android 개발자로 추후 진로를 결정할 생각은 없지만, 어찌다 �
 
 `ViewModel`을 알기 전 `MVVM`이란 개념을 알아야하는데, `ViewModel`이 여기서 파생되었기 때문입니다.
 
-![MVVMPattern](/assets/img/view_model/MVVM_handmade.png)
+![MVVMPattern](/assets/img/etc/view_model/MVVM_handmade.png)
 ~~(발그림 죄송합니다ㅎㅎ)~~
 
 **MVVM(Model-View-ViewModel)** 패턴은 하나의 코드에서 사용자에게 보여지는 GUI 부분, 즉 **View** 를 비즈니스 로직(모델)로부터 분리하여 독립적인 역할로써 존재하게 하는 `Software Architecture` 패턴입니다. 쉽게 말해서 `GUI`와 관련된 코드들을 관련없는 다른 코드들과 분리시켜서 **독립적** 으로 존재하게 하고 싶다는 겁니다.
@@ -33,13 +33,13 @@ Android에서 `View`는 UI 컨트롤러라고 부릅니다. 저희가 이미 아
 
 UI 컨트롤러(View)에서 관련 데이터를 저장하고 있게 되면 당연하게도 해당 UI 컨트롤러가 제거될 때 관련 데이터 또한 제거되게 되겠죠?? 이렇게 되면 UI 컨트롤러가 재생성 되게 될 때 관련 데이터 또한 다시 불러와야 하는 비효율적 문제가 생기게 됩니다. 대표적인 예시가 회전인데 Android에서 화면을 회전하게 될 때 UI 컨트롤러가 삭제 후 재생성이 되는데 사용하는 관점에서는 화면만 달라지는 것이 전부여야 하지만 UI가 재생성 되면서 데이터들까지 달라지는 참사가 생기게 되는 것이죠. (기존에는 `Bundle`을 사용해서 해결했지만, 이제는 성능의 한계에 부딪히게 되버렸다고 합니다.:sweat_smile:)
 
-![viewmodel-lifecycle](/assets/img/view_model/viewmodel-lifecycle.png)
+![viewmodel-lifecycle](/assets/img/etc/view_model/viewmodel-lifecycle.png)
 
 이와 같이 UI 컨트롤러와 상관없이 `ViewModel`이 UI 컨트롤러의 `LifeCycle`을 모두 포함하는 독립적인 `Life Cycle`을 갖게 되면서 UI 컨트롤러의 변동에도 데이터는 유지할 수 있게 되는 가장 큰 장점이 생기게 됩니다. 스마트폰의 성능이 향상되고 사용자의 활용이 복잡해지면서(어플리케이션 실행 중에 이것 저것 다른 활동을 하는 경우) `ViewModel`은 선택이 아닌 필수가 되었다고 할 수 있겠죠???:woozy_face:
 
 Android에서 구현되는 `MVVM` 패턴은 다음과 같습니다.
 
-![final-architecture](/assets/img/view_model/final-architecture.png)
+![final-architecture](/assets/img/etc/view_model/final-architecture.png)
 
 `MVVM` 개념에서 `Activity/Fragment`가 `View`임은 위에서 설명했고, 추가적으로 `Repository`가 `Model`이 되는 것입니다. `Repository`에서 또 데이터 베이스와 웹 서비스 관련 `Model`들과 소통이 이루어짐을 보여줍니다. 위에서 생소한 것이 `LiveData`일 것일 텐데요.
 

@@ -2,7 +2,7 @@
 layout: post
 title: "[English] 토익스피킹 LEVEL7 후기"
 description: "일주일 이내로 돈 안들이고 LEVEL7 160을 맞은 나의 공부 방법"
-img: toeic_speaking_score_circle.png
+img: /title/toeic_speaking_score_circle.png
 tags: [English]
 ---
 
@@ -28,7 +28,7 @@ tags: [English]
 무언가를 공부하려고 할 때 일단 책을 사는 것 만큼 마음에 안정이 되는 건 없더라구요 저는:grin:
 제가 고심 끝에 결정한 책을 바로 이 책입니다.
 
-![book](/assets/img/toeic_speaking/toeic_speaking_book.jpeg)
+![book](/assets/img/etc/toeic_speaking/toeic_speaking_book.jpeg)
 
 이 책 앞부분 개념 설명을 보는 것만으로도 토익 스피킹을 어떤 식으로 봐야 되는구나 정도는 이해할 수 있을 것입니다.
 하지만, 이 책은 특성상 실전용으로 나온 책인지라 이 책만 보고 이론 공부를 하는 것은 역부족일 것입니다.
@@ -38,14 +38,14 @@ tags: [English]
 이래도 되나 싶을 정도로 유튜브는 (당연히 무료로) 이미 질 좋은 토익 스피킹 강의들로 널려 있답니다.
 제일 먼저 보시기를 추천드리는 채널은 시계토끼제니쌤입니다.
 
-![jenny_youtuber](/assets/img/toeic_speaking/jenny_youtuber.png){: width="70%" height="70%"}
+![jenny_youtuber](/assets/img/etc/toeic_speaking/jenny_youtuber.png){: width="70%" height="70%"}
 
 [시계토끼제니쌤](https://www.youtube.com/channel/UCnLyZZgF9BQtayaWnPmNKWQ)은 정말 처음 토익 스피킹을 접하는 사람들이 보기 좋게끔 정말 쉽게 이론 수업을 해주십니다.
 이론 수업과 자연스럽게 이어지는 템플릿 암기 또한 어렵고 복잡한 것 없이 간단명료한 문장들로 구성되어 있어 기초를 탄탄히 잡을 수 있습니다. 사실 토익 스피킹이라는 시험이 우리 생각과는 달리 정말 휘황찬란하고 어려운 문장들을 뱉어야 고득점을 받는 것이 아니더라구요. 그것보다는 정말 간단하고 쉬워도 정확한 문장을 사용하는 것이 저희같이 원어민이 아닌 사람들에겐 훨씬 고득점에 가까운 길이라는 것을 명심하셨으면 좋겠습니다.
 
 그 다음에 혹시 이론을 더 채우고 싶으시다면 GwenTV를 추천드립니다.
 
-![gwen_youtuber](/assets/img/toeic_speaking/gwen_youtuber.png){: width="70%" height="70%"}
+![gwen_youtuber](/assets/img/etc/toeic_speaking/gwen_youtuber.png){: width="70%" height="70%"}
 
 [GwenTV](https://www.youtube.com/c/GwenTv)의 그웬 선생님은 정말 이론에 있어서는 빈틈없이 실전 활용까지 완벽하게 다듬어 주시는 느낌이 있습니다. 그러나 맨 처음 보기에는 다소 어렵게 느껴질 수도 있을 것 같아(저의 기준) 이론을 더 채우시고 싶을 때 들어주시면 효과가 배가 될 것 같습니다.
 
@@ -97,7 +97,7 @@ tags: [English]
 
 약 1주 뒤... 결과가 나오고
 
-![toeic_speaking_score](/assets/img/toeic_speaking/toeic_speaking_score.png)
+![toeic_speaking_score](/assets/img/etc/toeic_speaking/toeic_speaking_score.png)
 
 160점으로 LEVEL7 턱걸이를 하였습니다!
 이제서야 퍼즐이 맞춰지네요...지금부터 제가 하는 이야기를 매우 잘 들으셔야 합니다.

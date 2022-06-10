@@ -2,7 +2,7 @@
 layout: post
 title: "[OS] Log-structured File Systems"
 description: 보다 더 디스크 친화적인 LFS에 대해 알아보자
-img: lfs_block_address.png
+img: /title/lfs_block_address.png
 tags: [OS]
 ---
 
@@ -22,13 +22,13 @@ tags: [OS]
 
 ## 디스크에 연속적으로 쓰기
 
-![data-block](/assets/img/os-log-structured/data_block.png){: width="60%" height="60%"}
+![data-block](/assets/img/os/os-log-structured/data_block.png){: width="60%" height="60%"}
 
 우리가 T라는 시간 때, 파일에 D라는 데이터 block을 디스크 주소 A0에 쓰는 상황을 생각해 볼까요? 사용자가 데이터 block을 쓸 때 그에 해당하는 metadata까지 업데이트 해야 합니다. 파일의 데이터 block을 가리키는 inode 또한 디스크에 써야 하죠. 그 이후에 진행되는 모든 업데이트들을 디스크에 연속적으로 쓰는 것이 LFS의 핵심입니다.
 
 그러나, 디스크에 연속적으로 쓰는 것 자체로는 효율적인 쓰기를 기대하기는 어렵습니다. 위와 같은 상황에서 `T + δ` 라는 시간에 연속적이기 위해 디스크 주소 A1에 새로운 쓰기를 시행한다고 생각해볼까요? 그러나 `δ`라는 시간 동안 디스크는 여러 번 돌아갈 것이기 때문에 쓰기를 위해 A1을 가리키려고 또 돌게 될 것입니다. 그래서 실제로 A1을 가리킬 때의 시간을 `T + T(rotation)`이라 하면 두 번째 쓰기를 commit하기 전까지 디스크는 `T(rotation) – δ` 만큼의 시간을 기다려야 하는 것입니다. 
 
-![buffering](/assets/img/os-log-structured/buffering.png){: width="60%" height="60%"}
+![buffering](/assets/img/os/os-log-structured/buffering.png){: width="60%" height="60%"}
 
 이러한 문제를 해결하기 위해 LFS는 `write buffering`이라는 기술을 사용합니다. 디스크에 쓰기 전에 LFS는 in memory 상의 업데이트들을 계속해서 `tracking`합니다. 충분한 만큼의 업데이트가 모였을 때, 그것들을 한 번에 디스크에 씀으로써 효율적인 디스크 사용을 보장하는 것이죠. LFS가 한 번에 처리하는 이 여러 업데이트들의 모음을 `segment`라고 합니다. 위와 같이, 파일 j에 대한 4개 block의 업데이트와 파일 k에 대한 1개 block의 업데이트를 한 번에 모아 segemnt로 디스크에 쓰는 것입니다 segment가 크면 클 수록 효율성이 증가하는 것이죠!
 
@@ -40,13 +40,13 @@ FFS나 예전 Unix 파일 시스템과 같은 전형적인 파일 시스템에 �
 
 이를 위해, LFS의 디자이너들은 inode 번호와 inode 사이에 `Inode Map(imap)`이란 자료 구조로 Level of Indirection 개념을 도입하였습니다. imap은 inode 번호를 입력 값으로 받고 inode의 가장 최신 버전의 디스크 주소를 생성합니다. inode가 쓰일 때마다, imap이 그것의 새로운 위치를 업데이트합니다. 이렇게 imap은 지속성을 가져야 하기에 디스크에서 고정적인 부분에 위치해야 할 것입니다. 그러나 이렇게 된다면 데이터 block과 inode를 쓴 뒤 다시 imap으로 이동하기 위해 더 많은 디스크 seek이 소요되기 때문에 성능이 떨어지게 되겠지요? 그래서 LFS는 imap 또한 새로운 데이터를 쓴 곳 바로 다음에 위치시킵니다.
 
-![checkpoint](/assets/img/os-log-structured/checkpoint.png){: width="60%" height="60%"}
+![checkpoint](/assets/img/os/os-log-structured/checkpoint.png){: width="60%" height="60%"}
 
 흩뿌려져 있는 inode를 찾기 위해 inode map을 도입했는데... 이제는 inode map이 디스크 곳곳에 퍼져 있네요? 이렇게 되니 이제는 inode map을 어떻게 찾을 지가 문제가 되는 것입니다. 더 이상은 어쩔 수 없습니다. 파일 lookup을 시작하기 위해 디스크에 고정되고 알려진 위치를 확보해야 합니다. LFS는 이와 같은 위치(공간)을 `check-point region(CR)`이라 합니다. CR은 가장 최근 inode map에 대한 포인터를 가지고 있습니다. CR은 매 업데이트 때마다 업데이트 되는 것이 아니라 오직 주기적으로 업데이트 되기 때문에, 성능을 크게 해치지 않게 됩니다. 
 
 ## 디렉토리는?
 
-![directory](/assets/img/os-log-structured/directory.png){: width="60%" height="60%"}
+![directory](/assets/img/os/os-log-structured/directory.png){: width="60%" height="60%"}
 
 지금까지는 오직 inode와 데이터 block의 경우만을 다뤘습니다. 그러나 거의 모든 파일에 접근하기 위해서는 몇몇 디렉토리를 접근해야 하죠. 다행히도, LFS의 디렉토리 구조는 클래식한 Unix 파일 시스템과 기본적으로 동일합니다. 디스크에 새로운 파일을 생성할 경우, LFS도 마찬가지로 새로운 inode와 데이터, 또한 그 파일에 연관된 디렉토리의 inode 및 데이터까지 모두 써야하는 것이지요. impa은 디렉토리 파일과 새로이 생성된 파일에 대한 inode의 위치를 모두 갖고 있어야 합니다. 그래서 파일에 접근할 경우, 먼저 imap을 보고 디렉토리에 대한 inode의 위치를 찾고 디렉토리의 inode를 읽은 읽어 디렉토리 데이터의 위치를 구합니다. 그리고 나서는, 그 데이터를 읽으면 파일에 대한 inode 번호 매핑을 줄 것이고, 그 번호를 가지고 다시 imap에서 이와 같은 과정을 반복하여 파일을 읽을 수 있게 됩니다. 
 
@@ -54,21 +54,21 @@ FFS나 예전 Unix 파일 시스템과 같은 전형적인 파일 시스템에 �
 
 # 새로운 문제인 Garbage Collection
 
-![data_garbage](/assets/img/os-log-structured/data_garbage.png){: width="60%" height="60%"}
+![data_garbage](/assets/img/os/os-log-structured/data_garbage.png){: width="60%" height="60%"}
 
 다시 한 번 반복하자면, LFS는 새로운 버전의 파일을 반복해서 디스크의 새로운 위치에 씁니다. 이러한 과정은 다시 말하자면 파일의 예전 버전들이 디스크 내에 흩뿌려져 있음을 의미하기도 하죠. 이러한 예전 버전들을 `garbage`라 부릅니다. 존재하는 어떤 파일을 새로이 업데이트 한다면, 예전 버전과 현재 버전(live)의 데이터 block과 inode가 디스크 내에 모두 존재하게 되는 겁니다. 그러나 새로이가 아니라 내용을 덧붙이는 업데이트를 진행한다면, 아래와 같이 새로운 inode 버전이 만들어지지만 그 inode는 예전 즉 기존의 데이터 block또한 가리키고 있기 때문에 여전히 live한 block이라고 할 수 있는 겁니다. 
 
-![inode_garbage](/assets/img/os-log-structured/inode_garbage.png){: width="60%" height="60%"}
+![inode_garbage](/assets/img/os/os-log-structured/inode_garbage.png){: width="60%" height="60%"}
 
 그렇다면 데이터 block과 inode 등의 예전 버전을 우리는 어떻게 다루어야 할까요? 한 방법은 이와 같은 예전 버전들을 그대로 유지하여 사용자가 파일의 예전 버전을 복구할 수 있도록 하는 것입니다. 이와 같은 파일 시스템을 파일의 다양한 버전에 대한 tracking을 지속한다고 하여 `versioning` 파일 시스템이라 칭하죠. 하지만, LFS는 오직 가장 최근의 live한 파일의 버전 만을 유지합니다. 그래서 LFS는 주기적으로 파일의 데이터, inode, 다른 구조들의 dead한 예전 버전들을 주기적으로 찾아서 clean해 주어야 합니다. 이러한 cleaning은 디스크의 block들을 다시 free한 상태로 만들어 이후의 쓰기에 사용될 수 있게 합니다. 이러한 cleaning의 과정을 `Garbage Collection`이라 하며, 프로그램을 위해 사용하지 않는 메모리들을 free해주는 프로그래밍 언어의 한 테크닉을 의미합니다.
 
-![garbage_collection](/assets/img/os-log-structured/garbage_collection.png){: width="60%" height="60%"}
+![garbage_collection](/assets/img/os/os-log-structured/garbage_collection.png){: width="60%" height="60%"}
 
 우리는 이전에 LFS에서 디스크에 여러 쓰기 작업들을 한 번에 크게 segment 단위로 수행하는 것이 중요함을 이야기 했습니다. 이 segment가 효율적인 cleaning에도 적합합니다. 만약 LFS cleaner가 하나의 single 단위로 데이터 block이나 inode 등을 free한다고 생각해 봅시다. 결과는 디스크의 할당된 공간 사이 사이에 free한 구멍들이 송송 뚫려 있어, LFS가 디스크를 연속적으로 쓸 만한 크고 연속적인 공간을 찾지 못해 쓰기 성능이 급격하게 낮아질 것입니다. 이를 위해 LFS cleaner는 segment 단위를 기본으로 하여 연속적인 쓰기를 위해 공간을 큰 덩어리로 cleaning을 합니다. 주기적으로, LFS cleaner는 old한(부분적으로는 사용되고 있는) segment를 읽어 아직 live한 block들을 찾아낸 뒤, 그 block들을 새로운 segment에 다시 쓰고, 예전 segment를 free 해버리는 겁니다. 
 
 ## Block의 Liveness와 GC의 Policy
 
-![liveness](/assets/img/os-log-structured/liveness.png){: width="60%" height="60%"}
+![liveness](/assets/img/os/os-log-structured/liveness.png){: width="60%" height="60%"}
 
 그렇다면, 먼저 어떤 block이 live한지 어떻게 판단할 수 있을까요? 이를 위해서 LFS는 각각의 segment에 block들을 묘사하는 약간의 추가 정보를 기입합니다. 구체적으로는, LFS는 각각의 데이터 block에 대한 inode 번호와 offset을 포함하여 이 정보를 segment의 head에 기록하는데 이 block을 `segment summary block`이라고 합니다. 먼저, 해당 inode 번호가 imap에 존재하는 지를 확인하고 존재하지 않는다면 해당 데이터가 삭제되어 old 버전임을 알 수 있습니다. 존재할 경우, imap을 타서 도착한 inode에서 말하는 주소와 offset으로 계산된 주소를 비교하여 업데이트 유뮤, 즉 Liveness를 구분할 수 있습니다. LFS는 이후에 추가적으로 `version number`를 도입하였습니다. 업데이트 시, version number를 증가시키는 것이지요. 따라서, 단순히 segment summary block과 inode map의 version number를 비교함으로써 위와 같은 과정에서 발생하는 읽기를 대폭 줄일 수 있게 되었답니다.
 

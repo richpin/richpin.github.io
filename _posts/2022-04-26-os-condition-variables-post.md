@@ -2,7 +2,7 @@
 layout: post
 title: "[OS] Condition Variables"
 description: 보다 나은 스레드 운용을 위한 Condition Variables에 대해 알아보자
-img: c_condition_variables.jpeg
+img: /title/c_condition_variables.jpeg
 tags: [OS]
 ---
 
@@ -31,7 +31,7 @@ pthread_cond_signal(pthread_cond_t *c);
 
 Condition Variable은 하나의 명시적인 `Queue`입니다. `wait()` 함수는 위에서 설명한대로 기다려야 할 스레드가 Sleeping State, 정확히는 스레드를 Queue에 넣습니다. 'signal()' 함수는 wait()으로 기다리고 있는 스레드에게 신호를 줌으로써 `Ready State`, 즉 스레드를 깨우는 것이죠. 일반적인 사용법의 예시는 아래와 같습니다.
 
-![lock_condition](/assets/img/os-condition-variable/lock_condition.png){: width="60%" height="60%"}
+![lock_condition](/assets/img/os/os-condition-variable/lock_condition.png){: width="60%" height="60%"}
 
 Pthread_cond_wait함수의 가장 큰 특징은 기다리는 상태에 들어가면서 **일시적으로 Lock을 release 한 뒤 signal을 통해 깼을 때 다시 lock을 가지는 것입니다.** 왜냐하면 Lock을 건 상태로 기다리면 다른 스레드가 signal을 보낼 여지주차 줄 수 없기 때문이죠. 추가적으로 의문점을 가질 수 있는 질문은 다음과 같습니다.
 
@@ -51,23 +51,23 @@ A. 여러 스레드가 wait하기 때문에 벌어지는 문제를 해결하기 
 
 앞으로를 공부하기 위해 유명한 `Producer/Consumer Problem`을 알아봅시다. 매우 간단합다. Producer은 buffer에 아이템을 가져다 놓고 consumer은 이 item을 가져가는 것입니다.(읽기 및 삭제) 당연하지만 이 buffer은 모든 스레드의 shared resource겠죠?. 먼저 buffer가 하나인 경우의 코드는 아래와 같습니다. 
 
-![consumer-producer](/assets/img/os-condition-variable/consumer_producer.png){: width="60%" height="60%"}
+![consumer-producer](/assets/img/os/os-condition-variable/consumer_producer.png){: width="60%" height="60%"}
 
 알고 넘어가야 할 것은 이 문제에서 producer의 put과 producer의 get이 동시에 일어나는 것을 막기 위해 `lock`으로 감싸줘야 한다는 것입니다. 또 하나는, producer과 아이템을 넣어주고(put) 나서야 consumer가 가져갈 수(get) 있겠죠? 그래서 static variable인 `count`가 필요한 것입니다.
 
 먼저 첫 번째로, **Single Condition Variable**과 **If statement**을 이용하여 구현해봅시다. 
 
-![sc-if](/assets/img/os-condition-variable/sc_if.png){: width="60%" height="60%"}
+![sc-if](/assets/img/os/os-condition-variable/sc_if.png){: width="60%" height="60%"}
 
 만약의 한 명의 producer, 한 명의 consumer라면 완벽히 작동할 것입니다. 하지만 만약 여러 명의 consumer라면 어떻게 될까요? 두 명의 consumer가 있다고 해봅시다. producer가 아이템을 넣어 wait하고 있는 consumer에게 signal을 주었습니다. 그러나 그 순간에 `Context Switching`으로 다른 consumer가 실행되어 아이템을 가져가버리는 일이 생길 수 있는 겁니다! 거기에 모자라 그 consumer는 원래  기다리고 있었던 consumer에 signal을 보내는 잔인한 짓을 저지르게 되는 거죠...:cold_sweat: `cond variable`이 하나이기 때문에 이와 같은 일이 벌어지는 것입니다. 그림으로 표현하면 아래와 같습니다.
 
-![sc-if-problem](/assets/img/os-condition-variable/sc_if_problem.png){: width="40%" height="40%"}
+![sc-if-problem](/assets/img/os/os-condition-variable/sc_if_problem.png){: width="40%" height="40%"}
 
 signal을 보낸다고 바로 `Running State`로 스레드가 실행되는 것이 아닌 **Ready State**로 되기 때문에 다른 스레드가 새치기를 할 수 있는 것입니다. 이와 같이 깨어난 스레드가 Run을 하기 전에 어떠한 상태가 바뀌는 것을 `mesa-style`이라고 합니다.
 
 ## Mesa-style VS Hoare-style
 
-![mesa-hoare](/assets/img/os-condition-variable/mesa_hoare.png){: width="50%" height="50%"}
+![mesa-hoare](/assets/img/os/os-condition-variable/mesa_hoare.png){: width="50%" height="50%"}
 
 **Mesa-style** - 대부분의 실제 OS에도 작동하는 방식입니다. 시그널을 보내는 스레드가 `lock/processor`를 가지고 있는 것입니다. 즉 위 그림과 같이 시그널을 보내는 스레드가 lock까지 처리하기 위해 깨운 스레드도 Running이 아닌 Ready State로 유지(`Ready Queue에 들어가는 것`)하는 것입니다. 그렇기 때문에 Ready 상태에 있는 스레드들 중 가장 먼저 실행되는 스레드가 자신이 아닐 경우, 이 스레드는 깨어난 이유가 없어질 수 있는 것입니다. 이 예시에서는 가져갈 값이 이미 없는 거지요.
 
@@ -75,7 +75,7 @@ signal을 보낸다고 바로 `Running State`로 스레드가 실행되는 것�
 
 이와 같은 Mesa-style에 문제를 해결하기 위해 두 번쨰 방법으로 `if`대신 **while**을 사용하여 계속해서 condition을 `re-check`해줍니다.
 
-![sc-while](/assets/img/os-condition-variable/sc_while.png){: width="50%" height="50%"}
+![sc-while](/assets/img/os/os-condition-variable/sc_while.png){: width="50%" height="50%"}
 
 다시 한번 시그널을 받아 깨어났더니 이미 다른 consumer가 아이템을 가져간 스레드가 있다고 가정해봅시다. while이 아니라 전처럼 if라면 바로 의미없는 get과 signal을 실행하게 됩니다. 이런 예기치 못한 경우를 위해 반복적으로 condition을 확인해야 합니다.
 
@@ -83,11 +83,11 @@ signal을 보낸다고 바로 `Running State`로 스레드가 실행되는 것�
 
 producer와 consumer **두** 가지의 관계를 확실히 보장하기 위해, 즉 producer는 consumer에게만 consumer는 producer에게만 signal을 보내기 위해 **두** 가지의 cond variable을 가져야 합니다. 그 세 번째 해결책의 코드는 아래와 같습니다. 
 
-![tc-while](/assets/img/os-condition-variable/tc_while.png){: width="50%" height="50%"}
+![tc-while](/assets/img/os/os-condition-variable/tc_while.png){: width="50%" height="50%"}
 
 이렇게 해결했지만 여전히 buffer는 하나입니다. 더 좋은 `Concurrency`와 더 적은 `signal/wait 빈도`를 위해서 아래와 같이 producer가 buffer를 쭈욱 다 채우고 consumer들이 쭈욱 다 가져가는 아래와 같은 코드를 짤 수 있을 겁니다.
 
-![concurrency-efficiency](/assets/img/os-condition-variable/concurrency_efficiency.png){: width="50%" height="50%"}
+![concurrency-efficiency](/assets/img/os/os-condition-variable/concurrency_efficiency.png){: width="50%" height="50%"}
 
 # 생각해볼 수 있는 또 다른 문제
 

@@ -2,7 +2,7 @@
 layout: post
 title: "[Network] IPv6"
 description: IPV4에서 이제는 IPv6로
-img: ipv6.png
+img: /title/ipv6.png
 tags: [Network]
 ---
 
@@ -14,7 +14,7 @@ tags: [Network]
 
 또한, `Multihoming Problem`도 간과할 수 없는 문제입니다. 아래 그림을 봅시다.
 
-![multihoming-problem](/assets/img/network_ipv6/multihoming_problem.png){: width="70%" height="70%"}
+![multihoming-problem](/assets/img/network/network_ipv6/multihoming_problem.png){: width="70%" height="70%"}
 
 한 고객이 두 개의 `Service Provider(SP)`를 이용하고 있다고 합시다. SP1과 SP2 모두에게서 네트워크를 받기 위해 양쪽에 모두 `Advertise`를 수행하고 있습니다. 그런데 SP1은 운이좋게도 고객의 네트워크 주소를 `Route Aggregation`(포함)한 주소를 가집니다. 그래서 SP1 이후의 Advertising은 207.17/16만 보낼 수 있게 되고 다른 여러 Router들의 테이블 사이즈를 줄일 수 있는 것이지요. 그러나 이렇게 되면 `Longest Prefix Matching`에 의해 207.17.137/24로 패킷을 보내게 되면 모든 패킷이 SP2로만 들어오는 현상이 발생합니다. 그래서 울며 겨자 먹기로 위와 같이 Prefix가 24인 원래 고객의 네트워크 주소까지 넣을 수 밖에 없는 것이지요...:joy:
 
@@ -38,7 +38,7 @@ IPv6에서는 Fragmentation을 아예 막았습니다. 그렇기 때문에 유�
 
 IPv6의 헤더는 아래와 같이 생겼습니다. Field 하나씩 천천히 알아봅시다.
 
-![ipv6-header](/assets/img/network_ipv6/ipv6_header.png){: width="65%" height="65%"}
+![ipv6-header](/assets/img/network/network_ipv6/ipv6_header.png){: width="65%" height="65%"}
 
 **Version**은 IPv4의 헤더의 Version과 동일합니다. `4 bits`로 이루어졌으며, IPv6이기 때문에 값이 6이어야 합니다.
 
@@ -56,7 +56,7 @@ IPv6의 헤더는 아래와 같이 생겼습니다. Field 하나씩 천천히 �
 
 IPv6에는 아래와 같이 여러 `Extension Header`들이 존재합니다.
 
-![option-extension](/assets/img/network_ipv6/option_extension.png){: width="55%" height="55%"}
+![option-extension](/assets/img/network/network_ipv6/option_extension.png){: width="55%" height="55%"}
 
 이와 같이 기존, IP Header, TCP Header, Application Data이외에도 `Hop-by-hop Options Header`, `Routing Header`, `Fragment Header`, `Destination Options Header`이 존재합니다. (그림의 예시에선 4가지밖에 나오지 않았지만, `Authentication Header`, `Encapsulating Security Header` 등 가짓 수는 실제로 더 많습니다.)
 
@@ -68,7 +68,7 @@ IPv6에는 아래와 같이 여러 `Extension Header`들이 존재합니다.
 
 IPv4에서는 Option Field가 IP Header에 포함되어 있었기 때문에, Forwarding Performance에 악영향을 미쳣습니다. 그러나 IPv6에서는 이와 같이 여러 옵션들이 **External** 하게끔 IPv6 Header로부터 분리되었습니다. 그러나 위에서 설명한 Hop-by-hop Options Header를 제외하고는 Router에서는 모든 Extension Header들을 확인하지 않아도 됩니다. 그러한 이유로 Hop-by-hop Options Header는 항상 IPv6 Header 뒤에 위치하여야 합니다. 또한, IPv6의 **Next Header**가 이러한 Extension Header들에게도 달려있어 다음 헤더가 무엇인지를 가리키는 아래와 같은 구조를 취하게 되는 것입니다.
 
-![next-header](/assets/img/network_ipv6/next_header.png){: width="55%" height="55%"}
+![next-header](/assets/img/network/network_ipv6/next_header.png){: width="55%" height="55%"}
 
 # IPv6 Addresses
 
@@ -76,7 +76,7 @@ IPv4에서는 Option Field가 IP Header에 포함되어 있었기 때문에, For
 
 먼저, 타입에 대해 간단히 알아보도록 하겠습니다.
 
-![address-type](/assets/img/network_ipv6/address_type.png){: width="55%" height="55%"}
+![address-type](/assets/img/network/network_ipv6/address_type.png){: width="55%" height="55%"}
 
 - **Unicast**는 하나의 인터페이스와 Connect합니다. 그렇기에 유일한 값을 가져야만 합니다
 - **Multicast**는 `Identified`한 인터페이스 집합들과 Connect합니다. Broadcast의 단점을 위해 무작정 모든 인터페이스가 아닌 특정 그룹에 가입되어 있는 인터페이스들에게 패킷을 보내기 위해 쓰입니다.
@@ -89,31 +89,31 @@ IPv6는 128비트를 16비트씩 쪼개어 :으로 구분하며, 각 4비트는 
 
 IPv6에는 주소 자체에 기본적으로 `Format Prefix`가 존재합니다. IPv4와는 달리 이 Prefix를 이용해서 이 주소가 어디에 사용되는 주소인지를 파악할 수 있습니다. 그 종류는 대표적으로 아래와 같습니다.
 
-![type-identifiaction](/assets/img/network_ipv6/type_identification.png){: width="55%" height="55%"}
+![type-identifiaction](/assets/img/network/network_ipv6/type_identification.png){: width="55%" height="55%"}
 
 먼저 Unicast에 대해 알아보도록 할까요?
 
-![unspecified](/assets/img/network_ipv6/unspecified.png){: width="35%" height="35%"}
+![unspecified](/assets/img/network/network_ipv6/unspecified.png){: width="35%" height="35%"}
 
 `Unspecified Address`는 위와 같이 모든 비트가 0으로 이루어진 주소입니다. 어느 노드에도 할당될 수 없는 주소이기 때문에 없는 주소라 생각해도 무방합니다. `0::0` 또는 `::`으로도 표현됩니다.
 
-![loopback](/assets/img/network_ipv6/loopback.png){: width="35%" height="35%"}
+![loopback](/assets/img/network/network_ipv6/loopback.png){: width="35%" height="35%"}
 
 `Loopback Address`는 자신에게 돌아오는 주소로 절대 인터페이스 밖으로 나가지 않습니다. IPv4의 `127.0.0.1`과 같다고 보시면 되겠습니다. `0::1` 또는 `::1`로 표현됩니다. 위에 설명한 이 두 주소를 우리는 `Special Unicast Address`로 부를 수 있습니다.
 
-![linklocal-unicast](/assets/img/network_ipv6/linklocal_unicast.png){: width="35%" height="35%"}
+![linklocal-unicast](/assets/img/network/network_ipv6/linklocal_unicast.png){: width="35%" height="35%"}
 
 `Link-Local Unicast Address`는 어떤 노드가 같은 링크에 있는 여러 이웃들과 Communicating할 때 쓰이는 주소입니다. 즉 `Switch`나 `Router` 등으로 물리적으로 같이 연결되어 있는 노드 사이의 통신에 쓰입니다. `FE80::/64`으로 표현될 수 있겠습니다. 가장 중요한 특징은 Link-Local Unicast Address는 항상 `Auto-Configuration` 된다는 점입니다. 위에서 필요한 것은 64비트의 `Interface ID` 입니다. 하지만 호스트 스스로 이를 만들 수 있습니다. 아래를 봅시다.
 
-![eui-64](/assets/img/network_ipv6/eui_64.png){: width="55%" height="55%"}
+![eui-64](/assets/img/network/network_ipv6/eui_64.png){: width="55%" height="55%"}
 
 우리는 인터페이스마다 48비트의 MAC 주소가 있다는 것을 압니다. 통상적으로, 앞의 24비트는 제조사, 뒤의 24비트는 해당 인터페이스의 일련 번호를 나타냅니다. 64비트를 채우기 위해 가운데에 `FFFE`를 채워넣으며 7번째 비트에는 해당 MAC주소가 `Unique`한지를 비트로 나타냅니다. 대부분은 웬만하면 겹칠 일이 없기에 1을 채워줍니다. 이러면 Interface ID가 완성되며, 이러한 주소를 `IEEE EUI-64 Address`라고 합니다.
 
-![sitelocal-unicast](/assets/img/network_ipv6/sitelocal_unicast.png){: width="55%" height="55%"}
+![sitelocal-unicast](/assets/img/network/network_ipv6/sitelocal_unicast.png){: width="55%" height="55%"}
 
 `Site-Local Unicast Address`은 한 Local Network에서 `Subnet`별로 나누어 Communicating할 때 쓰이는 주소입니다. IPv4의 `Private Address`와 그 쓰임이 같습니다. 이는 `Router`에게서 받아야 하기 때문에 Auto-Configuration이라 할 수 없습니다. 마치 `DHCP`를 보는 것 같지요? `FFC0::/48`로 표현될 수 있습니다.
 
-![global-unicast](/assets/img/network_ipv6/global_unicast.png){: width="55%" height="55%"}
+![global-unicast](/assets/img/network/network_ipv6/global_unicast.png){: width="55%" height="55%"}
 
 그래도 커다란 인터넷 내에서 네트워킹을 하기 위해서는 **Global**한 주소가 있어야겠죠? `Global Unicast`는 위의 구조를 보면 알겠지만 첫 48비트를 제외한 비트 구조는 Site-Local Unicast Address와 같습니다. 조금 더 정확히 알아봅시다. Prefix가 001을 가지기 때문에 첫 hexadecimal은 2또는 3이 됩니다.
 
@@ -124,21 +124,21 @@ IPv6에는 주소 자체에 기본적으로 `Format Prefix`가 존재합니다. 
 **Site-Level Aggregation Identifier(SLA)**은 하나의 개인적인 Organization, 즉 Site-Local에서 설명했듯이 Local Network에서 Subnet을 나눠주기 위해 사용됩니다.
 (+RES는 Reserved로 사용하지 않는 비트입니다.)
 
-![level-partition](/assets/img/network_ipv6/level_partition.png){: width="35%" height="35%"}
+![level-partition](/assets/img/network/network_ipv6/level_partition.png){: width="35%" height="35%"}
 
 이와 같은 Level에 따른 비트는 구별을 위해 그 비트 전체를 사용하는 것은 아닙니다. 위와 같이 그 비트를 또 쪼개고 쪼개 Aggregation을 최적화할 수 있습니다. 추가적으로 우리가 기억할 것이 있습니다. 주소가 상단으로 이동할수록 Prefix는 /64, /60, /56, /52, /48과 같이 무조건 **4비트**씩 쪼개지는데 이를 `Nibble Boundaries`라고 합니다.
 
-![multicast](/assets/img/network_ipv6/multicast.png){: width="55%" height="55%"}
+![multicast](/assets/img/network/network_ipv6/multicast.png){: width="55%" height="55%"}
 
 이제 `Multicast Address`에 대해 알아봅시다. 첫 8비트가 모두 1이며 Flags 영역은 Permanently-assigned(well-known) 주소라면 1. `Non-permanently-assgined(transient)`라면 1은 표기합니다. 대부분은 이미 정해져 있기 때문에 0을 가진다고 생각해도 무방합니다. Scope 부분은 우리가 Multicast를 하고 싶은 범위에 따라 위의 표와 같은 비트를 표기합니다. 여기서 Organization-local은 여러 Site들을 묶어놓은 영역이며, Node-local은 loopback과 같이 자신의 호스트내에서 벗어나지 않는 영역을 의미합니다. 그림으로 쉽게 표현한 것은 아래와 같습니다.
 
-![scope](/assets/img/network_ipv6/scope.png){: width="45%" height="45%"}
+![scope](/assets/img/network/network_ipv6/scope.png){: width="45%" height="45%"}
 
 `Group ID`는 그 영역 내에서 Multicast를 하기 위한 집단을 구분하기 위해 사용됩니다. 예를 들어 모든 노드들은 1, 모든 라우터들은 2를 붙입니다. Link-local에서 9는 RIP Routers, B는 mobile agents, 01:02는 DHCP agents가 있습니다. Site-local에서 3은 DHCP Server, 4는 DHCP relay를 의미합니다. 여기서 DHCP는 위의 Site-Local에서 설명하였듯이 DHCP 역할을 하는 Routers를 의미합니다.(IPv6에서 DHCP가 없어졌으니까요.) 또한 Scope 구분 없이 101은 Network Time Protocol, 129는 Gatekeeper을 의미합니다. 
 
 지금까지 공부한 IPv6 구조를 보면 아래와 같습니다. 아직 공부가 안된 것이 Solicited-Node이죠? 뒤에 설명하겠습니다.
 
-![architecture](/assets/img/network_ipv6/architecture.png){: width="65%" height="65%"}
+![architecture](/assets/img/network/network_ipv6/architecture.png){: width="65%" height="65%"}
 
 이와 같은 IPv6의 장점을 크게 6개로 추려서 이야기 해보겠습니다.
 1. Routing Table 크기가 작아지고 Fragmentation이 사라지면서 Routing의 Efficiency가 올라갔습니다.
@@ -158,7 +158,7 @@ ICMPv6의 종류에는 다음과 같은 5가지가 잇습니다. 먼저 알아�
 - Neighbor Advertisement(NA)
 - Redirect
 
-![router-solicitation](/assets/img/network_ipv6/router_solicitation.png){: width="50%" height="50%"}
+![router-solicitation](/assets/img/network/network_ipv6/router_solicitation.png){: width="50%" height="50%"}
 
 `Router Solicitation(RS)`은 ICMP 패킷 타입이 133으로, **Link-Local Router**에게 정보를 받기 위해 요청하는 것을 의미합니다. 그렇기에 Source는 host 자신의 Link-local 주소나 ::(Unspecified)이여야 합니다. 또한 Destination은 Link-local의 모든 Router들에게 Mulitcast해야 하기 때문에 FF02::2가 되야 할 겁니다. 정보에는 
 - Router의 IP Address
@@ -169,7 +169,7 @@ ICMPv6의 종류에는 다음과 같은 5가지가 잇습니다. 먼저 알아�
 
 등등이 포함됩니다. 물론 이에 대한 응답은 Router Advertisement겠죠?
 
-![router-advertisement](/assets/img/network_ipv6/router_advertisement.png){: width="50%" height="50%"}
+![router-advertisement](/assets/img/network/network_ipv6/router_advertisement.png){: width="50%" height="50%"}
 
 `Router Advertisement(RA)`는 ICMP 패킷 타입 134로, Router가 노드(host)들에게 정보를 전달하는 것을 의미합니다. 그렇기에 Source는 Router 자신의 Link-local Address이여야 합니다. RA는 앞서 설명한 RS에 대한 응답뿐만 아니라, 그러한 요청이 안와도 주기적으로 계속해서 이루어집니다. RS는 그저 이 주기를 기다리지 못하고 **빨리 정보를 받기 위해** 이루어지는 것이지요. 따라서 RS에 대한 요청이라면 Destination이 해당 노드의 Link-local Unicast Address이여야 할 껍니다. 하지만, 그냥 주기적으로 뿌려주는 RA라면 Link-scope의 Node에 대한 Multicast로 보내야 하기 때문에 Destination이 FF02::1이 되야 하는 것이지요. 혹시 모를 오류를 위해 `Hop-limit`은 255로 설정됩니다.
 

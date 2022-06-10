@@ -2,7 +2,7 @@
 layout: post
 title: "[Jekyll] jekyll serve 명령 실행 시 crash-abort 이슈"
 description: jekyll serve 명령 실행이 bug report에 대한 내용과 함께 abort 될 때
-img: jekyll_logo.jpeg
+img: /title/jekyll_logo.jpeg
 tags: [Jekyll] 
 ---
 
