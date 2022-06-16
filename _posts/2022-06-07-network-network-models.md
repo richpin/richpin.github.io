@@ -68,7 +68,7 @@ Packet Switching에 대해 조금 더 자세히 알아볼까요? Packet Switchin
 
 ![5_layer](/assets/img/network/network_models/5_layer.png){: width="90%" height="90%"}
 
-Packet Switched Networks에는 크게는 위와 같이 총 **5개의 계층**이 존재합니다. (이후에는 더 세부적으로 7계층으로 나누어집니다.)먼저 1계층은 `Physical Layer`로 말 그대로 물리적인 하드웨어로서의 전송을 의미합니다. 정말 간단하게 빛으로 슝슝 이동하는 0과 1의 데이터들을 생각해볼 수 있겠지요? 2계층은 `Data Link Layer`로 초반에 설명하였던 MAC을 의미합니다. 물리적으로 연결된 같은 LAN안에서 MAC 주소를 통해 전송이 이루어지는 계층으로 네트워를 공부할 때만큼은 (1계층이 있지만) 실적인 데이터 이동이 이루어지는 계층으로 이해하셔도 좋습니다. 3계층은 `Network Layer`로 node, 즉 router에서 IP주소를 통해 전송이 이루어지는 계층입니다. 
+Packet Switched Networks에는 크게는 위와 같이 총 **독립적인** 5개의 **계층**이 존재합니다. (이후에는 더 세부적으로 7계층으로 나누어집니다.)먼저 1계층은 `Physical Layer`로 말 그대로 물리적인 하드웨어로서의 전송을 의미합니다. 정말 간단하게 빛으로 슝슝 이동하는 0과 1의 데이터들을 생각해볼 수 있겠지요? 2계층은 `Data Link Layer`로 초반에 설명하였던 MAC을 의미합니다. 물리적으로 연결된 같은 LAN안에서 MAC 주소를 통해 전송이 이루어지는 계층으로 네트워를 공부할 때만큼은 (1계층이 있지만) 실적인 데이터 이동이 이루어지는 계층으로 이해하셔도 좋습니다. 3계층은 `Network Layer`로 node, 즉 router에서 IP주소를 통해 전송이 이루어지는 계층입니다. 
 
 그렇게 router에서나 router로 부터 패킷이 이동할 때에는 3계층의 Network Layer에서 IP를 통해 경로를 찾고 2계층의 Data Link Layer의 MAC에서(실제로는 1계층의 Physical Layer도) 실질적인 데이터 전송이 이루어지는 것입니다. 이 이동의 단위를 hop이라 표현하기 때문에 `hop-to-hop delivery`라고 표현합니다. 
 

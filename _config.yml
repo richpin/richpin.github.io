@@ -21,6 +21,11 @@ discus-identifier: richpin # add your discus identifier
 
 # Tracker
 analytics: # Google Analytics
+  provider: "ggogle-gtag"
+  
+  google:
+    tracking_id: "G-KY1Q68TEJ5"
+    anonymize_ip : # true, false(default)
 
 # Build Settings
 markdown: kramdown

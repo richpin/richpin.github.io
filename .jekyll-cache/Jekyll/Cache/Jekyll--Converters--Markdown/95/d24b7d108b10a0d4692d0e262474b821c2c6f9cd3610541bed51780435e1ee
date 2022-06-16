@@ -1,4 +1,4 @@
-I"[U<p>네트워크의 기초를 다지기 위해 가장 기본적인 <code class="language-plaintext highlighter-rouge">Network Model</code>을 알아봅시다.</p>
+I"yU<p>네트워크의 기초를 다지기 위해 가장 기본적인 <code class="language-plaintext highlighter-rouge">Network Model</code>을 알아봅시다.</p>
 
 <h1 id="simplified-network-model">Simplified Network Model</h1>
 
@@ -62,7 +62,7 @@
 
 <p><img src="/assets/img/network/network_models/5_layer.png" alt="5_layer" width="90%" height="90%" /></p>
 
-<p>Packet Switched Networks에는 크게는 위와 같이 총 <strong>5개의 계층</strong>이 존재합니다. (이후에는 더 세부적으로 7계층으로 나누어집니다.)먼저 1계층은 <code class="language-plaintext highlighter-rouge">Physical Layer</code>로 말 그대로 물리적인 하드웨어로서의 전송을 의미합니다. 정말 간단하게 빛으로 슝슝 이동하는 0과 1의 데이터들을 생각해볼 수 있겠지요? 2계층은 <code class="language-plaintext highlighter-rouge">Data Link Layer</code>로 초반에 설명하였던 MAC을 의미합니다. 물리적으로 연결된 같은 LAN안에서 MAC 주소를 통해 전송이 이루어지는 계층으로 네트워를 공부할 때만큼은 (1계층이 있지만) 실적인 데이터 이동이 이루어지는 계층으로 이해하셔도 좋습니다. 3계층은 <code class="language-plaintext highlighter-rouge">Network Layer</code>로 node, 즉 router에서 IP주소를 통해 전송이 이루어지는 계층입니다.</p>
+<p>Packet Switched Networks에는 크게는 위와 같이 총 <strong>독립적인</strong> 5개의 <strong>계층</strong>이 존재합니다. (이후에는 더 세부적으로 7계층으로 나누어집니다.)먼저 1계층은 <code class="language-plaintext highlighter-rouge">Physical Layer</code>로 말 그대로 물리적인 하드웨어로서의 전송을 의미합니다. 정말 간단하게 빛으로 슝슝 이동하는 0과 1의 데이터들을 생각해볼 수 있겠지요? 2계층은 <code class="language-plaintext highlighter-rouge">Data Link Layer</code>로 초반에 설명하였던 MAC을 의미합니다. 물리적으로 연결된 같은 LAN안에서 MAC 주소를 통해 전송이 이루어지는 계층으로 네트워를 공부할 때만큼은 (1계층이 있지만) 실적인 데이터 이동이 이루어지는 계층으로 이해하셔도 좋습니다. 3계층은 <code class="language-plaintext highlighter-rouge">Network Layer</code>로 node, 즉 router에서 IP주소를 통해 전송이 이루어지는 계층입니다.</p>
 
 <p>그렇게 router에서나 router로 부터 패킷이 이동할 때에는 3계층의 Network Layer에서 IP를 통해 경로를 찾고 2계층의 Data Link Layer의 MAC에서(실제로는 1계층의 Physical Layer도) 실질적인 데이터 전송이 이루어지는 것입니다. 이 이동의 단위를 hop이라 표현하기 때문에 <code class="language-plaintext highlighter-rouge">hop-to-hop delivery</code>라고 표현합니다.</p>
 
@@ -70,7 +70,7 @@
 
 <p><code class="language-plaintext highlighter-rouge">Network Layer</code>에 대 조금 더  알아볼까요? 3계층인 Network Layer의 목표는 서로 다른 네트워크와 라우터를 통해 source에서 destination까지 forward되도록 하는 데 있습니다. 각각의 호스트와 라우터들이 <strong>IP</strong>라는 network layer address로 식별 됩니다. 이는 LAN에서 사용하는 MAC이라는 이름의 data link layer address와는 완전히 <strong>독립적</strong>임을 알아야 합니다. Network Layer의 서비스는 또한 <code class="language-plaintext highlighter-rouge">Unreliable connectionless service</code>와 <code class="language-plaintext highlighter-rouge">Reliable connection-oriented service</code>로 나눠질 수 있습니다.</p>
 
-<p><img src="/assets/img/network/network_models/datagram.png" alt="datagram" width="80%" height="80%" /></p>
+<p><img src="/assets/img/network/network_models/datagram.png" alt="datagram" width="70%" height="70%" /></p>
 
 <p>Network Layer의 Unreliable connectionless service를 다른 말로 <code class="language-plaintext highlighter-rouge">Datagram</code>이라고도 표현하며, 우리가 쓰는 IP가 이에 해당하기 떄문에 이것으로 3계층을 이해하셔도 무방합니다. Datagram은 <strong>3계층 관점에서는</strong> connectionless 즉 두 호스트 간에 확실한 connection이 성사되지 않습니다. 각각의 패킷들은 모두 독립적으로 처리되기에 서로가 실용적이라 판단한 다른 루트를 통할 수 있는 것이지요. 그렇기 때문에 순서가 서로 뒤죽박죽이 될 수 있으며, 몇몇 패킷들은 경로를 잘못 타서 사라질 수도 있는 것이지요. 이 또한, 그에 대한 대비책을 뒤의 글을 통해 차차 알아갈 수 있을 겁니다. 그래도 Datagram이 이러한 특성으로 갖는 유연함 덕분에 현재 우리가 쓰는 IP가 이를 채택하고 있는 것입니다.</p>
 
